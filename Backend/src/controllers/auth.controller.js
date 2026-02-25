@@ -2,68 +2,41 @@ const { where, Op } = require('sequelize');
 const userModel = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const authService = require('../services/auth.service')
 
 async function registerUser(req,res){
 
    try {
     const {username,email,password,role ="user"} = req.body;
-
-       const isUserAlreadyExists =  await userModel.findOne({
-        where : 
-            {email},
-        
-       });
-
-       if(isUserAlreadyExists){
-        return res.status(400).json({message : "User is Already Exist"});
-       }
-       const isUsernameExist = await userModel.findOne({where : {username}});
-
-       if(isUsernameExist){
-        return res.status(400).json({message : "UserName is Already Taken"});
-       }
-       const saltRounds = 10;
-       const hashPassword = await  bcrypt.hash(password,saltRounds);
-
-    const user = await userModel.create({
-        username,email,password : hashPassword,role
-    });   
+    const user = await authService.RegisterService({username,email,password,role});
     res.status(201).json({message : "User Created Successfully",
-        username,email,user
+        user
     }
     );
     }
     catch (error){
-        console.log(error);
-        res.status(501).json({message : "Server Error"});
+        res.status(400).json({message : error.message});
     }  
 }
 
 async function loginUser(req,res) {
-    const {email,password} = req.body;
-    const isRegisterUser = await userModel.findOne({where : {email}});
-    if(isRegisterUser){
-        const hash = isRegisterUser.password;
-        const isPasswordmatched = await bcrypt.compare(password,hash);
-        if(!isPasswordmatched){
-            return res.status(400).json({message : "Email or Password is Wrong."});
-        }
-        else{
-            const Jwt_secret = process.env.JWT_SECRET;
-            const token = await jwt.sign({
-                id : isRegisterUser.id,
-                email : isRegisterUser.email,
-                role : isRegisterUser.role
-            },Jwt_secret,{expiresIn : '7d'});
+        try{
+            const {email,password} = req.body;
+            const {user,token} = await authService.LoginService(email,password);
 
-            res.cookie("token",token);
+            res.cookie("token",token,{
+                httpOnly :true,
+                secure : process.env.NODE_ENV === "production",
+                maxAge : 10*24*60*60*1000 // 10 days
+            });
 
             res.status(200).json({message : "Login Successful"})
         }
-    }
-    else{
-        res.status(400).json({message : "Email or Password is Wrong." });
-    }
+        catch(error){
+            res.status(400).json({message : error.message});
+        }
+    
+    
     
 }
 
