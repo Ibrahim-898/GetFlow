@@ -48,10 +48,10 @@ const user = sequelize.define('users',{
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
     }
-},{
+    },{
      freezeTableName: true,
     
-}
+    }
 );
 
 

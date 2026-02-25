@@ -1,7 +1,4 @@
-const { where, Op } = require('sequelize');
-const userModel = require('../models/user.model');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+
 const authService = require('../services/auth.service')
 
 async function registerUser(req,res){
@@ -30,7 +27,7 @@ async function loginUser(req,res) {
                 maxAge : 10*24*60*60*1000 // 10 days
             });
 
-            res.status(200).json({message : "Login Successful"})
+            res.status(200).json({message : "Login Successful",token});
         }
         catch(error){
             res.status(400).json({message : error.message});
