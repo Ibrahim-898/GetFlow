@@ -4,10 +4,14 @@ const bcrypt = require('bcrypt');
 
 async function RegisterApiKeyService(userid) {
     const apikey = await generateApiKey();
+    const prefix = apikey.slice(0,8);
+    const secret = apikey.slice(8);
     const genSalt = 10;
-    const hashedkey =await  bcrypt.hash(apikey,genSalt);
+   
+    const  bcrypthashedkey =await  bcrypt.hash(secret,genSalt);
+    
     const key = await apikeyModel.create({
-        userid : userid,key : hashedkey
+        userid : userid, prefix : prefix ,key : bcrypthashedkey
     });
 
     return apikey;
