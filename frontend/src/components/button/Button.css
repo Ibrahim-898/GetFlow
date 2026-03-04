@@ -16,24 +16,25 @@
 
 /* Variants */
 .btn-primary {
-  background: var(--primary-color);
-  color: #fff;
+  background: #00f5d4;
+  color: #000;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-dark);
+  background: #a8fef2;
+  color:#000;
   transform: translateY(-1px);
 }
 
 .btn-outline {
   background: transparent;
-  border: 2px solid var(--primary-color);
-  color: var(--primary-color);
+  border: 2px solid #19e5ca;
+  color: #333;
 }
 
 .btn-outline:hover:not(:disabled) {
-  background: var(--primary-color);
-  color: #fff;
+  background: #00f5d4;
+  color: #000;
 }
 
 .btn-secondary {

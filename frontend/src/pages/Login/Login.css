@@ -5,6 +5,7 @@
   justify-content: center;
   padding: 2rem;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  margin-top: 70px;
 }
 
 .login-container {
@@ -28,7 +29,7 @@
   gap: 0.5rem;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: #00f5d4;
   margin-bottom: 1.5rem;
 }
 
