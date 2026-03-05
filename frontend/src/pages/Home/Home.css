@@ -42,6 +42,24 @@
   margin-top: 30px;
 }
 
+.hero-right{
+  width: auto;
+  z-index:0;
+  position: relative;
+}
+
+.hero-right::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+  height: 80px;
+  background: #f1f5f9;
+  transition: var(--transition);
+  z-index: 100;
+}
+
 /* ================= BUTTONS ================= */
 
 .primary-btn {

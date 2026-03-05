@@ -30,7 +30,7 @@ export default function Home() {
         </div>
 
         <div className="hero-right">
-          <Spline scene="https://prod.spline.design/GAMMydgfkQs4zK5r/scene.splinecode" />
+          <Spline className='sp-bot' scene="https://prod.spline.design/GAMMydgfkQs4zK5r/scene.splinecode" />
         </div>
       </section>
 
