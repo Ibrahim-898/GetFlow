@@ -1,17 +1,20 @@
 const redis = require('../db/redisClient');
 
- async function slidingWindowCounter(key,limit,windowsec) {
+ async function slidingWindowCounter(clientKey,companyKey,clientLimit,companyLimit,windowsec) {
     const now = Math.floor(Date.now()/1000);
     const result = await redis.slidingWindowCounter(
-        key,
-        limit,
+        clientKey,
+        companyKey,
+        clientLimit,
+        companyLimit,
         windowsec,
         now
     );
 
     return {
     allowed: result[0] === 1,
-    current: result[1],
+    clientCount : result[1],
+    companyCount : result[2],
      };
     
 }

@@ -34,21 +34,29 @@ async function rateLimitMiddleware(req, res, next) {
     }
 
     const plan = userRecord.plan || "free"; // default to free if undefined
-    const limits = {
-      free: 3,
-      pro: 1000,
-      enterprise: 5000
+    const companyLimitsPerPlan = {
+      free: 5,
+      pro: 5000,
+      enterprise: 10000
     };
-    const limit = limits[plan] || 100;
+
+    
+    const companyLimit = companyLimitsPerPlan[plan] || 100;
+    const clientLimit = 3; 
     const windowSec = 60;
 
-    const redisKey = `rate:${record.id}`;
-    const result = await slidingWindowCounter(redisKey, limit, windowSec);
+    const companyRedisKey = `rate:${record.id}`;
+    const clientRedisKey = `rate:${record.id}:${req.ip}`;
 
-    console.log(`API ${record.id}: allowed=${result.allowed}, count=${result.current}`);
+    const result = await slidingWindowCounter(companyRedisKey, clientRedisKey,companyLimit,clientLimit, windowSec);
+
+    console.log(`API ${record.id}: allowed=${result.allowed}, client=${result.clientCount}, company = ${result.companyCount}`);
 
     if (!result.allowed) {
-      return res.status(429).json({ message: "Too Many Requests" });
+      const msg = result.limitType === "company"
+                ? "Company rate limit exceeded"
+                : "Client rate limit exceeded";
+            return res.status(429).json({ message: msg });
     }
 
     next();

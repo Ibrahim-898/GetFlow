@@ -14,7 +14,7 @@ const luaScriptPath = path.resolve(__dirname, "../scripts/sliding-window-counter
 const luaScript = fs.readFileSync(luaScriptPath, "utf8");
 
 redis.defineCommand("slidingWindowCounter", {
-    numberOfKeys: 1,
+    numberOfKeys: 2,
     lua: luaScript,
 });
 
