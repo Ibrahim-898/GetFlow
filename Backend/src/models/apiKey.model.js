@@ -18,9 +18,9 @@ const apikey = sequelize.define('apikeys',{
         onDelete : "CASCADE",
     },
     prefix : {
-        type : DataTypes.STRING,
+        type : DataTypes.STRING(8),
         allowNull : false,
-        index : true,
+        unique: true,
 
     },
     key :{
@@ -32,6 +32,11 @@ const apikey = sequelize.define('apikeys',{
         type : DataTypes.ENUM("active","inactive","suspended"),
         defaultValue : "active",
     },
+    rate_limit: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1000
+    },
+
     expire_at: {
         type: DataTypes.DATE,
         allowNull: true,
@@ -39,8 +44,16 @@ const apikey = sequelize.define('apikeys',{
 },
     {
         freezeTableName : true,
+        timestamps : true,
+        indexes :[
+            {
+                fields : ["prefix"],
+            },
+            {
+                fields : ["userid"]
+            }
+        ]
     }
-
 );
 
 

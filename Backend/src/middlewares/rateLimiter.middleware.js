@@ -2,9 +2,12 @@ const slidingWindowCounter = require("../services/rateLimit.service");
 const apikeyModel = require('../models/apiKey.model');
 const userModel = require('../models/user.model');
 const bcrypt = require('bcrypt');
+const logModel = require('../models/log.model');
+const apikey = require("../models/apiKey.model");
 
 async function rateLimitMiddleware(req, res, next) {
   try {
+     
     const apiKey = req.headers["x-api-key"];
     if (!apiKey) {
       return res.status(400).json({ message: "API Key Required" });
@@ -13,7 +16,7 @@ async function rateLimitMiddleware(req, res, next) {
     const secret = apiKey.slice(8);
     const record = await apikeyModel.findOne({ where: {prefix : prefix, status: "active" } });
      if (!record) {
-      return res.status(400).json({ message: "Invalid API Key" });
+      return res.status(401).json({ message: "Invalid API Key" });
     }
     const isValid = await bcrypt.compare(secret,record.key);
     
@@ -25,31 +28,20 @@ async function rateLimitMiddleware(req, res, next) {
       return res.status(401).json({message : "API Key has benn Expired."})
     }
    
-    const userRecord = await userModel.findOne({
-      where: { id: record.userid },
-    });
-
-    if (!userRecord) {
-      return res.status(400).json({ message: "User not found for this API key" });
-    }
-
-    const plan = userRecord.plan || "free"; // default to free if undefined
-    const companyLimitsPerPlan = {
-      free: 5,
-      pro: 5000,
-      enterprise: 10000
-    };
-
-    
-    const companyLimit = companyLimitsPerPlan[plan] || 100;
+    const companyLimit = record.rate_limit;
     const clientLimit = 3; 
     const windowSec = 60;
 
+    const clientIp = req.headers['x-forwarded-for']?.split(',')[0] || req.ip;
+
     const companyRedisKey = `rate:${record.id}`;
-    const clientRedisKey = `rate:${record.id}:${req.ip}`;
+    const clientRedisKey = `rate:${record.id}:${clientIp}`;
+
+    const startHrTime = process.hrtime();
 
     const result = await slidingWindowCounter(companyRedisKey, clientRedisKey,companyLimit,clientLimit, windowSec);
 
+    
     console.log(`API ${record.id}: allowed=${result.allowed}, client=${result.clientCount}, company = ${result.companyCount}`);
 
     if (!result.allowed) {
@@ -58,6 +50,18 @@ async function rateLimitMiddleware(req, res, next) {
                 : "Client rate limit exceeded";
             return res.status(429).json({ message: msg });
     }
+
+    req.rateLimitInfo = {
+      apiKeyId: record.id,
+      clientIp: clientIp,
+      companyCount: result.companyCount,
+      clientCount: result.clientCount,
+      companyLimit: companyLimit,
+      clientLimit: clientLimit,
+      windowSec: windowSec,
+      startTime : startHrTime
+    };
+
 
     next();
   } catch (error) {

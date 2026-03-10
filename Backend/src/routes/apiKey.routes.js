@@ -7,7 +7,8 @@ const router = express.Router();
 
 
 router.post('/register',authMiddleware,registerApiKey);
-router.get('/',rateLimit,getApiKey);
+
+router.get('/',getApiKey);
 
 
 module.exports = router;
