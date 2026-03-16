@@ -27,7 +27,11 @@ const apikey = sequelize.define('apikeys',{
         type : DataTypes.STRING,
         allowNull : false
     },
-    
+    target_url :{
+        type : DataTypes.STRING,
+        allowNull : false,
+
+    },
     status :{
         type : DataTypes.ENUM("active","inactive","suspended"),
         defaultValue : "active",

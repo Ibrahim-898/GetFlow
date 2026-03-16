@@ -5,7 +5,11 @@ const apikeyModel = require('../models/apiKey.model');
 async function registerApiKey(req,res){
     try{
     const userid = req.user.id;
-    const apikey = await apiKeyService.RegisterApiKeyService(userid);
+    const {target_url} = req.body;
+    if(!target_url){
+        return res.status(400).json({message: "targetUrl is required"});
+    }
+    const apikey = await apiKeyService.RegisterApiKeyService(userid,target_url);
     res.status(201).json({message : "Here is Your ApiKey : ",apikey });
     }
     catch(error){
@@ -17,12 +21,8 @@ async function registerApiKey(req,res){
 
     async function getApiKey(req, res) {
     try {
-        
         const apikeys = await apikeyModel.findAll({
-        // include: 'user', // optional: include user info if you set up association
         });
-
-        // Send as JSON
         res.status(200).json({
         success: true,
         data: apikeys
