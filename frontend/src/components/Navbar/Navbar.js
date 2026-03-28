@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { authAPI } from '../../services/api';
+
 import './Navbar.css';
+
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Add logout logic here
+  const handleLogout = async () => {
+  try {
+    await authAPI.logout();
+  } catch (error) {
+    console.log('Logout API failed, clearing local state');
+  } finally {
+    localStorage.removeItem('authToken');
     navigate('/login');
-  };
+  }
+};
 
   return (
     <nav className="navbar">

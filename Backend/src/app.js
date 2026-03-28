@@ -7,6 +7,7 @@ const rateLimit = require('./middlewares/rateLimiter.middleware')
 const logging = require('./middlewares/logger.middleware');
 const analyticsRoutes = require('./routes/analytics.routes');
 const gatewayRoutes = require('./routes/gateway.routes');
+const cors = require('cors');
 const app = express();
 
 
@@ -17,7 +18,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-
+// Allow your frontend origin
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 
 app.use('/api/auth',authRoutes);
 app.use('/api/keys',apiKeyRoutes);
