@@ -76,6 +76,7 @@ const Navbar = () => {
             {isLoggedIn ? (
               <>
                 <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                <Link to="/main" className="nav-link">Get API</Link>
                 <button 
                   onClick={handleLogout}
                   className="btn btn-outline flex items-center gap-2"
