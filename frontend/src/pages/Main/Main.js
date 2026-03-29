@@ -22,7 +22,7 @@ const Main = () => {
   const fetchApiKeys = async () => {
     try {
       const response = await apiKeyAPI.getAll();
-      setApiKeys(response.data || []);
+      setApiKeys(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch API keys:', error);
     }
