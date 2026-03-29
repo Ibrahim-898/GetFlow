@@ -56,6 +56,8 @@ const Login = () => {
         localStorage.setItem('authToken', response.data.token);
       }
       
+      window.dispatchEvent(new Event('authChange'));
+      
       // Backend sets httpOnly cookie automatically
       console.log('✅ Login successful! Cookie & token stored');
       

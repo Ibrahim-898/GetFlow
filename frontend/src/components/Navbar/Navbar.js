@@ -1,25 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from '../../services/api';
+import { LogIn, LogOut } from 'lucide-react';
 
 import './Navbar.css';
 
-
-
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
+  // Listen for auth changes in real-time
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem('authToken');
+      setIsLoggedIn(!!token);
+    };
+
+    // Initial check
+    checkAuthStatus();
+
+    // Listen for storage changes (works across tabs)
+    window.addEventListener('storage', checkAuthStatus);
+
+    // Custom event listener for same-tab login/logout
+    window.addEventListener('authChange', checkAuthStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkAuthStatus);
+      window.removeEventListener('authChange', checkAuthStatus);
+    };
+  }, []);
+
   const handleLogout = async () => {
-  try {
-    await authAPI.logout();
-  } catch (error) {
-    console.log('Logout API failed, clearing local state');
-  } finally {
-    localStorage.removeItem('authToken');
-    navigate('/login');
-  }
-};
+    try {
+      await authAPI.logout();
+    } catch (error) {
+      console.log('Logout API failed, clearing local state');
+    } finally {
+      localStorage.removeItem('authToken');
+      setIsLoggedIn(false);
+      // Dispatch custom event so other components know auth changed
+      window.dispatchEvent(new Event('authChange'));
+      navigate('/login');
+    }
+  };
 
   return (
     <nav className="navbar">
@@ -48,8 +73,30 @@ const Navbar = () => {
           </div>
           
           <div className="navbar-auth">
-            <Link to="/login" className="btn btn-outline">Login</Link>
-            <Link to="/register" className="btn btn-primary">Get Started</Link>
+            {isLoggedIn ? (
+              <>
+                <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                <button 
+                  onClick={handleLogout}
+                  className="btn btn-outline flex items-center gap-2"
+                  title="Logout"                    // tooltip on hover
+                >
+                  <LogOut size={18} />
+                  <span>Logout</span>      
+                </button>
+              </>
+            ) : (
+              <>
+                <Link 
+                  to="/login" 
+                  className="btn btn-outline flex items-center gap-2"
+                >
+                  <LogIn size={18} />
+                  Login
+                </Link>
+                <Link to="/register" className="btn btn-primary">Get Started</Link>
+              </>
+            )}
           </div>
         </div>
       </div>
