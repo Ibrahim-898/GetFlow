@@ -25,7 +25,7 @@ async function rateLimitMiddleware(req, res, next) {
     }
 
     if(record.expire_at && record.expire_at.getTime()< Date.now()){
-      return res.status(401).json({message : "API Key has benn Expired."})
+      return res.status(401).json({message : "API Key has been Expired."})
     }
    
     const companyLimit = record.rate_limit;

@@ -1,4 +1,4 @@
-const createLog = require('../services/analytics.service');
+const {createLog} = require('../services/analytics.service');
 
 async function   loggerMiddleware(req,res,next) {
     const startHrTime = process.hrtime();
@@ -11,7 +11,7 @@ async function   loggerMiddleware(req,res,next) {
         const rateInfo = req.rateLimitInfo || {};
 
         await createLog({
-          apikey_id: rateInfo.apikeyId,
+          apikey_id: rateInfo.apiKeyId,
           ip_address: rateInfo.clientIp,
           method: req.method,
           endpoint: req.originalUrl,

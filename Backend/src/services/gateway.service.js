@@ -1,5 +1,6 @@
 const apikeyModel = require('../models/apiKey.model');
 const axios = require('axios');
+const bcrypt =require('bcrypt')
 
 async function forwardRequst(req,res) {
     try{
@@ -7,22 +8,43 @@ async function forwardRequst(req,res) {
     if (!apiKey) return res.status(401).json({ message: "API key is required" });
 
     const prefix = apiKey.slice(0,8);
-    const record = await apikeyModel.findOne({ where: {prefix : prefix,key :apiKey ,status : "active" } });
+    const secret = apiKey.slice(8);
+    
+    const record = await apikeyModel.findOne({ where: {prefix : prefix,status : "active" } });
     if (!record) return res.status(403).json({ message: "Invalid or inactive API key" });
 
+    const isValid = await bcrypt.compare(secret,record.key);
+        
+    if (!isValid) {
+        return res.status(401).json({ message: "Invalid API Key" });
+    }
+    
+    if(record.expire_at && record.expire_at.getTime()< Date.now()){
+        return res.status(401).json({message : "API Key has been Expired."})
+    }
+       
     const targetUrl = record.target_url;
     if (!targetUrl) return res.status(500).json({ message: "Target URL not found" });
 
-    const url = `${targetUrl}${req.originalUrl}`;
-    const headers = {...req.headers};
-    headers['host']=  new URL(targetUrl).host;
+    console.log("Original Url " ,req.originalUrl);
+    const path = req.originalUrl.replace('/gateway', '') || '/';
+    const headers = { ...req.headers };
 
-    const axiosConfig= {
-        method : req.method,
-        url : url,
-        headers : headers
-        
-       
+    delete headers['host'];
+    delete headers['connection'];
+    delete headers['content-length'];
+    delete headers['transfer-encoding'];
+    delete headers['x-api-key'];
+
+    const url = `${targetUrl}${path}`;
+
+    console.log("Forwarding to:", url);
+
+    const axiosConfig = {
+        method: req.method,
+        url: url,
+        headers: headers,
+        timeout: 10000
     };
     if (['POST','PUT','PATCH'].includes(req.method.toUpperCase())) {
         axiosConfig.data = req.body; 
