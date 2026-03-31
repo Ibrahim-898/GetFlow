@@ -1,15 +1,38 @@
-const {getLogByApiKey} = require('../services/analytics.service');
+const logModel = require('../models/log.model');
+const apikeyModel = require('../models/apiKey.model');
 
-async function getLogs(req,res) {
+async function getLogs(req, res) {
+  try {
+    const userId = req.user.id;
 
-    try{
-    const apiKeyId = req.rateLimitInfo.apiKeyId;
+    const apiKeys = await apikeyModel.findAll({
+      where: { userid: userId }
+    });
 
-    const logs = await  getLogByApiKey(apiKeyId);
-    res.status(200).json({data : logs})
-    } catch(error){
-        res.status(500).json({message : "Error fetching logs"});
+    if (apiKeys.length === 0) {
+      return res.status(404).json({
+        message: "No API keys found for this user"
+      });
     }
-    
+
+    const apiKeyIds = apiKeys.map(k => k.id);
+
+    const logs = await logModel.findAll({
+      where: {
+        apikey_id: apiKeyIds
+      }
+    });
+
+    res.status(200).json({
+      data: logs
+    });
+
+  } catch (error) {
+    console.error("GET LOGS ERROR:", error);
+    res.status(500).json({
+      message: error.message
+    });
+  }
 }
+
 module.exports = { getLogs };
