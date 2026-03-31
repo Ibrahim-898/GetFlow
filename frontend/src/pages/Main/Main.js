@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiKeyAPI } from '../../services/apiKeyAPI';
+import { authAPI } from '../../services/api';
 import Button from '../../components/button/Button';
 import './Main.css';
 
@@ -19,14 +20,25 @@ const Main = () => {
     fetchApiKeys();
   }, []);
 
+const getCurrentUser = async () => {
+        const res = await authAPI.getme('/auth/me');
+        return res.data;
+      };
+
   const fetchApiKeys = async () => {
     try {
-      const response = await apiKeyAPI.getAll();
-      setApiKeys(response.data.data || []);
+      const response = await apiKeyAPI.getAll();    
+
+    const user =  await getCurrentUser();
+
+    setApiKeys(
+      response.data.data.filter(key => key.userid === user.id)
+    );
     } catch (error) {
       console.error('Failed to fetch API keys:', error);
     }
   };
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -155,24 +167,27 @@ const Main = () => {
               )}
             </div>
 
-            <div className="keys-grid">
-              {apiKeys.map((key) => (
-                <div key={key.id} className="key-card">
-                  <div className="key-info">
-                    <code className="key-prefix">{key.prefix}</code>
-                    <div className="key-meta">
-                      <span className="target-url">{key.target_url}</span>
-                      <span className="created-date">
-                        {new Date(key.createdAt).toLocaleDateString()}
-                      </span>
+          <div className="keys-grid">
+            {Array.isArray(apiKeys)
+              ? apiKeys
+                  .map((key) => (
+                    <div key={key.id} className="key-card">
+                      <div className="key-info">                        
+                        <code className="key-prefix">Key : {key.prefix}...</code>
+                        <div className="key-meta">
+                          <span className="target-url">{key.target_url}</span>
+                          <span className="created-date">
+                            {new Date(key.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="key-status">
+                        <span className="status active">Active</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="key-status">
-                    <span className="status active">Active</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  ))
+              : null}
+          </div>
           </div>
         </div>
       </div>
