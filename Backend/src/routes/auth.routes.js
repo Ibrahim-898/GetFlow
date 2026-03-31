@@ -1,5 +1,5 @@
 const express = require('express');
-const {registerUser,loginUser} = require('../controllers/auth.controller');
+const {registerUser,loginUser,UserProfile} = require('../controllers/auth.controller');
 const authMiddleware = require('../middlewares/auth.middleware');
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.post('/logout', (req, res) => {
   res.clearCookie('token');
   res.json({ message: 'Logged out successfully' });
 });
+router.get('/profile',authMiddleware,UserProfile);
 router.get('/me', authMiddleware, (req, res) => {
   res.json({
     id: req.user.id,

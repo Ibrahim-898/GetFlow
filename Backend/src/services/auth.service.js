@@ -65,6 +65,16 @@ async function LoginService(email,password) {
         
     
 }
+async function  getProfile(userid) {
+
+    const record =await userModel.findOne({where : {id : userid}});
+    if(!record){
+         throw new Error("There is no such User.")
+    }
+    return record.username;
+
+    
+}
 
 
-module.exports = {RegisterService,LoginService};
+module.exports = {RegisterService,LoginService,getProfile};

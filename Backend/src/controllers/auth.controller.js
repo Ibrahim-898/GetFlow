@@ -37,4 +37,17 @@ async function loginUser(req,res) {
     
 }
 
-module.exports = { registerUser,loginUser};
+async function UserProfile(req,res) {
+    try{
+    const userid = req.user.id;
+    const username = await authService.getProfile(userid);
+    res.status(200).json({
+        data: username
+        });
+    }
+    catch(error){
+         res.status(400).json({message : error.message});
+    }
+    
+}
+module.exports = { registerUser,loginUser,UserProfile};
