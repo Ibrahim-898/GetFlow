@@ -8,22 +8,18 @@ import './Navbar.css';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true); // <-- for scroll effect
+  const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
 
-  // Listen for auth changes in real-time
   useEffect(() => {
     const checkAuthStatus = () => {
       const token = localStorage.getItem('authToken');
       setIsLoggedIn(!!token);
     };
 
-    // Initial check
     checkAuthStatus();
-
-    // Listen for storage changes (works across tabs)
     window.addEventListener('storage', checkAuthStatus);
-
-    // Custom event listener for same-tab login/logout
     window.addEventListener('authChange', checkAuthStatus);
 
     return () => {
@@ -40,14 +36,36 @@ const Navbar = () => {
     } finally {
       localStorage.removeItem('authToken');
       setIsLoggedIn(false);
-      // Dispatch custom event so other components know auth changed
       window.dispatchEvent(new Event('authChange'));
       navigate('/login');
     }
   };
 
+  // ------------------- Scroll effect -------------------
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // scrolling down and scrolled at least 100px
+        setShowNavbar(false);
+      } else {
+        // scrolling up
+        setShowNavbar(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
+
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${showNavbar ? 'visible' : 'hidden'}`}>
       <div className="container navbar-container">
         <Link to="/" className="navbar-brand">
           <svg className="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -70,8 +88,7 @@ const Navbar = () => {
           <div className="navbar-links">
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/services" className="nav-link">Services</Link>
-          </div>
-          
+          </div>          
           <div className="navbar-auth">
             {isLoggedIn ? (
               <>
@@ -80,7 +97,7 @@ const Navbar = () => {
                 <button 
                   onClick={handleLogout}
                   className="btn btn-outline flex items-center gap-2"
-                  title="Logout"                    // tooltip on hover
+                  title="Logout"
                 >
                   <LogOut size={18} />
                   <span>Logout</span>      

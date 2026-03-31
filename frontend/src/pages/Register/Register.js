@@ -76,7 +76,7 @@ const Register = () => {
       // Navigate to dashboard or home
       navigate('/', { 
         state: { 
-          message: 'Registration successful! Welcome to RateGuard.' 
+          message: 'Registration successful! Welcome to GetFlow.' 
         } 
       });
       
@@ -102,7 +102,7 @@ const Register = () => {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
-            <span>RateGuard</span>
+            <span>GetFlow</span>
           </Link>
           <h1>Create Account</h1>
           <p>Sign up to start protecting your APIs</p>

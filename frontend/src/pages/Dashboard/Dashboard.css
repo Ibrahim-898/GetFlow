@@ -1,0 +1,138 @@
+/* Layout */
+.dashboard-page {
+  padding: 120px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Header */
+.dashboard-header {
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Status */
+.status,
+.error,
+.empty {
+  margin: 20px 0;
+}
+
+.error {
+  color: red;
+}
+
+/* Grid */
+.logs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Card */
+.log-card {
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: 0.2s ease;
+}
+
+.log-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Top */
+.log-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-code {
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.status-code.success {
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.status-code.error {
+  border: 1px solid red;
+  color: red;
+}
+
+.rate-limit {
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px dashed orange;
+}
+
+.chart-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background-color: #fff;
+}
+
+.chart-section h2 {
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+/* Main */
+.log-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.endpoint {
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.method {
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+/* Meta */
+.log-meta {
+  font-size: 12px;
+  opacity: 0.7;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Bottom */
+.log-bottom {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  opacity: 0.7;
+}

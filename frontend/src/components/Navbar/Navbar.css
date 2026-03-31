@@ -3,17 +3,27 @@
   top: 0;
   left: 0;
   right: 0;
-  background: #fff7;
+  background: #fffe;
   border-bottom: 1px solid #444;
   z-index: 1000;
-  height: 80px;
+  height: 80px;  
+  transition: transform 0.3s ease-in-out;
+}
+
+.navbar.hidden {
+  transform: translateY(-100%);
+}
+
+.navbar.visible {
+  transform: translateY(0);
 }
 
 .navbar-container {
   display: flex;
-  align-items: center;
+  align-items: center; /* vertically centers all children */
   justify-content: space-between;
   height: 100%;
+  gap: 1rem; /* optional spacing between brand and menu */
 }
 
 .navbar-brand {
@@ -36,9 +46,11 @@
   gap: 2rem;
 }
 
-.navbar-links {
+.navbar-links,
+.navbar-auth {
   display: flex;
-  gap: 2rem;
+  align-items: center; /* vertically center all links and buttons */
+  gap: 1rem;
 }
 
 .nav-link {

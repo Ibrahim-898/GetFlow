@@ -25,6 +25,23 @@
   box-sizing: border-box;
 }
 
+/* src/index.css  or  src/App.css */
+
+*,
+*::before,
+*::after {
+  cursor: url('../public/cursor.png'), auto !important;
+}
+
+/* Optional: Change cursor on hover for interactive elements */
+a:hover,
+button:hover,
+input:hover,
+textarea:hover,
+[role="button"]:hover {
+  cursor: auto !important;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   background-color: var(--background-color);
