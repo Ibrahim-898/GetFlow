@@ -21,9 +21,11 @@
     "express": "^5.2.1",
     "ioredis": "^5.10.0",
     "jsonwebtoken": "^9.0.3",
+    "node-cron": "^4.2.1",
     "pg": "^8.18.0",
     "rate-limiter-flexible": "^9.1.1",
     "redis": "^5.11.0",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "sslcommerz-lts": "^1.2.0"
   }
 }

@@ -7,6 +7,7 @@ const rateLimit = require('./middlewares/rateLimiter.middleware')
 const logging = require('./middlewares/logger.middleware');
 const analyticsRoutes = require('./routes/analytics.routes');
 const gatewayRoutes = require('./routes/gateway.routes');
+const paymentRoutes = require('./routes/payment.routes');
 const cors = require('cors');
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(cors({
 app.use('/api/auth',authRoutes);
 app.use('/api/keys',apiKeyRoutes);
 app.use('/api/analytics',analyticsRoutes);
+app.use('/api/payment',paymentRoutes);
 app.use('/gateway',gatewayRoutes);
 
 
