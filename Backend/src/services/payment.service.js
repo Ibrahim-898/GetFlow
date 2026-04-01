@@ -77,7 +77,7 @@ async function initPayment(payload) {
 
   const response = await sslcz.init(data);
 
-  console.log("SSL Response:", response);
+  console.log("SSL Response:", response.GatewayPageURL);
 
   return response.GatewayPageURL;
 }

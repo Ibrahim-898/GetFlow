@@ -16,7 +16,7 @@ async function initializePayment(req, res) {
 }
 
 function success(req, res) {
-  res.send("Payment Success");
+  return res.redirect("http://localhost:3000/?payment=success");
 }
 
 function fail(req, res) {
