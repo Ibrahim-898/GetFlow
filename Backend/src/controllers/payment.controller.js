@@ -27,9 +27,14 @@ function cancel(req, res) {
   res.send("Payment Cancelled");
 }
 
-function ipn(req, res) {
-  handleIPN(req.body);
-  res.sendStatus(200);
+async function ipn(req, res) {
+  try {
+    await handleIPN(req.body); // ✅ wait for DB operations
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("IPN Controller Error:", err.message);
+    res.sendStatus(500);
+  }
 }
 
 module.exports = {

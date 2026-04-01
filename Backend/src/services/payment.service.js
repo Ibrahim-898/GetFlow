@@ -1,44 +1,72 @@
-// services/payment.service.js
 const SSLCommerzPayment = require('sslcommerz-lts');
 const User = require('../models/user.model');
 const Payment = require('../models/payment.model');
+const { Op } = require('sequelize');
 
 const store_id = process.env.SSLCZ_STORE_ID;
 const store_passwd = process.env.SSLCZ_STORE_PASS;
 const is_live = false;
+
+
+const PLAN_CONFIG = {
+  pro: {
+    monthly: { price: 1000, duration: 1 },
+    yearly: { price: 900, duration: 12 }
+  },
+  enterprise: {
+    monthly: { price: 2500, duration: 1 },
+    yearly: { price: 2000, duration: 12 }
+  }
+};
+
 
 async function initPayment(payload) {
   const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
 
   const tranId = `TXN_${Date.now()}`;
 
-  // ✅ Save payment record
+
+  const planData = PLAN_CONFIG[payload.planId];
+  if (!planData) throw new Error("Invalid plan");
+
+  const billing = planData[payload.billingCycle];
+  if (!billing) throw new Error("Invalid billing cycle");
+
+  const amount = billing.price;
+
+
+  const user = await User.findByPk(payload.userId);
+  if (!user) throw new Error("User not found");
+
+  
   await Payment.create({
-    user_id: payload.userId,
+    user_id: user.id,
     transaction_id: tranId,
-    amount: payload.amount,
+    amount,
+    plan: payload.planId,
+    billingCycle: payload.billingCycle,
     status: 'pending'
   });
 
   const data = {
-    total_amount: payload.amount,
+    total_amount: amount,
     currency: 'BDT',
     tran_id: tranId,
 
-    success_url: 'http://localhost:8000/api/payment/success',
-    fail_url: 'http://localhost:8000/api/payment/fail',
-    cancel_url: 'http://localhost:8000/api/payment/cancel',
-    ipn_url: 'http://localhost:8000/api/payment/ipn',
+    success_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/success',
+    fail_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/fail',
+    cancel_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/cancel',
+    ipn_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/ipn',
 
-    product_name: 'GetFlow Subscription',
+    product_name: `${payload.planId} subscription (${payload.billingCycle})`,
     product_category: 'Service',
     product_profile: 'general',
 
     shipping_method: 'NO',
 
-    cus_name: payload.name,
-    cus_email: payload.email,
-    cus_phone: payload.phone,
+    cus_name: user.username,
+    cus_email: user.email,
+    cus_phone: user.phone,
 
     cus_add1: 'N/A',
     cus_city: 'Dhaka',
@@ -54,6 +82,7 @@ async function initPayment(payload) {
   return response.GatewayPageURL;
 }
 
+
 async function handleIPN(data) {
   console.log("IPN Data:", data);
 
@@ -66,26 +95,34 @@ async function handleIPN(data) {
 
     if (!payment) return;
 
-    const userId = payment.user_id;
+    const user = await User.findByPk(payment.user_id);
+    if (!user) return;
 
-    // ✅ SUCCESS
-    if (status === 'VALID') {
+    if (status === 'VALID' || status === 'VALIDATED') {
+
+      const plan = payment.plan;
+      const billingCycle = payment.billingCycle;
+
+      const planData = PLAN_CONFIG[plan][billingCycle];
+      const duration = planData.duration;
 
       const now = new Date();
-      const expiry = new Date();
-      expiry.setMonth(expiry.getMonth() + 1);
+      let newExpiry = new Date();
 
-      // Example: assign plan
-      const plan = 'pro';
+
+      if (user.planExpiresAt && user.planExpiresAt > now) {
+        newExpiry = new Date(user.planExpiresAt);
+      }
+
+      newExpiry.setMonth(newExpiry.getMonth() + duration);
 
       await User.update(
         {
           plan,
-          planExpiresAt: expiry
+          planExpiresAt: newExpiry
         },
-        { where: { id: userId } }
+        { where: { id: user.id } }
       );
-      console.log("val_id : ",val_id);
 
       await Payment.update(
         {
@@ -96,10 +133,8 @@ async function handleIPN(data) {
       );
 
       console.log("Payment success + subscription activated");
-
     }
 
-   
     else if (status === 'FAILED') {
       await Payment.update(
         { status: 'failed' },

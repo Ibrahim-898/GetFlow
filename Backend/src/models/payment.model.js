@@ -28,6 +28,12 @@ const Payment = sequelize.define('payments', {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
+  plan: {
+    type: DataTypes.STRING,
+  },
+billingCycle: {
+    type :DataTypes.STRING,
+},
 
   status: {
     type: DataTypes.ENUM('pending', 'success', 'failed', 'cancelled'),
