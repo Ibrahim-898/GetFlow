@@ -42,6 +42,7 @@ export const authAPI = {
   logout: () => api.post('/auth/logout'),  // Backend should clear cookie
   getme:() => api.get('auth/me'),
   get_analytics:() => api.get('analytics/logs'),
+  getProfile: () => api.get('auth/profile'),
 };
 
 export default api;

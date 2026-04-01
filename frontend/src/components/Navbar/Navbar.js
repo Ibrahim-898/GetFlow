@@ -1,30 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from '../../services/api';
-import { LogIn, LogOut } from 'lucide-react';
+import { LogIn, LogOut, User } from 'lucide-react';
 
 import './Navbar.css';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true); // <-- for scroll effect
+  const [userInitial, setUserInitial] = useState('');
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
 
+  // Check auth token + fetch profile
   useEffect(() => {
-    const checkAuthStatus = () => {
+    const checkAuthAndFetchProfile = async () => {
       const token = localStorage.getItem('authToken');
-      setIsLoggedIn(!!token);
+      const isAuth = !!token;
+      
+      setIsLoggedIn(isAuth);
+
+      if (isAuth) {
+        setIsProfileLoading(true);
+        try {
+          // Assuming your authAPI has a method for profile, or use axios/fetch directly
+          const response = await authAPI.getProfile(); // or fetch('/api/auth/profile', { headers: { Authorization: `Bearer ${token}` } })
+          
+          const userName = response.data.username;
+          
+          if (userName) {
+            setUserInitial(userName.charAt(0).toUpperCase());
+          }
+        } catch (error) {
+          console.error('Failed to fetch user profile:', error);
+          // Optional: If profile fetch fails, you can still keep user logged in or logout
+          // setIsLoggedIn(false);
+        } finally {
+          setIsProfileLoading(false);
+        }
+      } else {
+        setUserInitial('');
+      }
     };
 
-    checkAuthStatus();
-    window.addEventListener('storage', checkAuthStatus);
-    window.addEventListener('authChange', checkAuthStatus);
+    checkAuthAndFetchProfile();
+
+    // Listen for auth changes (e.g. after login/logout)
+    const handleAuthChange = () => {
+      checkAuthAndFetchProfile();
+    };
+
+    window.addEventListener('authChange', handleAuthChange);
+    window.addEventListener('storage', handleAuthChange);
 
     return () => {
-      window.removeEventListener('storage', checkAuthStatus);
-      window.removeEventListener('authChange', checkAuthStatus);
+      window.removeEventListener('storage', handleAuthChange);
+      window.removeEventListener('authChange', handleAuthChange);
     };
   }, []);
 
@@ -36,21 +69,20 @@ const Navbar = () => {
     } finally {
       localStorage.removeItem('authToken');
       setIsLoggedIn(false);
+      setUserInitial('');
       window.dispatchEvent(new Event('authChange'));
       navigate('/login');
     }
   };
 
-  // ------------------- Scroll effect -------------------
+  // Scroll effect (unchanged)
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // scrolling down and scrolled at least 100px
         setShowNavbar(false);
       } else {
-        // scrolling up
         setShowNavbar(true);
       }
 
@@ -59,10 +91,23 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  // Profile Avatar Component
+  const ProfileAvatar = () => (
+    <div className="profile-avatar" title="Profile">
+      {isProfileLoading ? (
+        <div className="avatar-circle loading">...</div>
+      ) : userInitial ? (
+        <div className="avatar-circle">
+          {userInitial}
+        </div>
+      ) : (
+        <User size={20} />
+      )}
+    </div>
+  );
 
   return (
     <nav className={`navbar ${showNavbar ? 'visible' : 'hidden'}`}>
@@ -89,11 +134,18 @@ const Navbar = () => {
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/services" className="nav-link">Services</Link>
           </div>          
+          
           <div className="navbar-auth">
             {isLoggedIn ? (
               <>
                 <Link to="/dashboard" className="nav-link">Dashboard</Link>
                 <Link to="/main" className="nav-link">Get API</Link>
+                
+                {/* Profile Link */}
+                <Link to="/profile" className="profile-link">
+                  <ProfileAvatar />
+                </Link>
+
                 <button 
                   onClick={handleLogout}
                   className="btn btn-outline flex items-center gap-2"

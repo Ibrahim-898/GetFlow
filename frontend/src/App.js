@@ -8,6 +8,7 @@ import Register from './pages/Register/Register';
 import Services from './pages/Services/Services';
 import Main from './pages/Main/Main'
 import Dashboard from './pages/Dashboard/Dashboard'
+import Profile from './pages/Profile/Profile'
 import './App.css';
 
 function App() {
@@ -21,7 +22,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/services" element={<Services />} />
           <Route path="/main" element={<Main />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />          
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
       <Footer />

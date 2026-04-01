@@ -40,10 +40,11 @@ async function loginUser(req,res) {
 async function UserProfile(req,res) {
     try{
     const userid = req.user.id;
-    const username = await authService.getProfile(userid);
+    const user = await authService.getProfile(userid);
     res.status(200).json({
-        data: username
-        });
+      username: user.username,
+      email: user.email,
+    });
     }
     catch(error){
          res.status(400).json({message : error.message});

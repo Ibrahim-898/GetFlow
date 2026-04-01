@@ -71,7 +71,7 @@ async function  getProfile(userid) {
     if(!record){
          throw new Error("There is no such User.")
     }
-    return record.username;
+    return record;
 
     
 }

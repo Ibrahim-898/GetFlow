@@ -79,6 +79,55 @@
   width: 100%;
 }
 
+/* Profile Avatar Styles */
+.profile-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease; 
+}
+
+.profile-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #bbe5fc, #5ffff7);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.profile-link:hover .avatar-circle {
+  transform: scale(1.08);
+}
+
+/* Optional: Make it look nicer on mobile */
+@media (max-width: 768px) {
+  .avatar-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
+
 .navbar-auth {
   display: flex;
   gap: 1rem;
