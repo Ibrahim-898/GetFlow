@@ -139,7 +139,7 @@ const Navbar = () => {
             {isLoggedIn ? (
               <>
                 <Link to="/dashboard" className="nav-link">Dashboard</Link>
-                <Link to="/main" className="nav-link">Get API</Link>
+                <Link to="/main" className="nav-link">Create Apikey</Link>
                 
                 {/* Profile Link */}
                 <Link to="/profile" className="profile-link">
@@ -164,7 +164,7 @@ const Navbar = () => {
                   <LogIn size={18} />
                   Login
                 </Link>
-                <Link to="/register" className="btn btn-primary">Get Started</Link>
+                <Link to="/register" className="btn btn-primary">Register</Link>
               </>
             )}
           </div>

@@ -11,7 +11,6 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'user'
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -74,9 +73,9 @@ const Register = () => {
       }
       
       // Navigate to dashboard or home
-      navigate('/', { 
+      navigate('/login', { 
         state: { 
-          message: 'Registration successful! Welcome to GetFlow.' 
+          message: 'Registration successful!' 
         } 
       });
       
