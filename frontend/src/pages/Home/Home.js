@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FiLink, FiSettings, FiBarChart2 } from "react-icons/fi";
 import Spline from "@splinetool/react-spline";
 import "./Home.css";
@@ -71,7 +71,9 @@ export default function Home() {
             </p>
 
             <div className="hero-buttons">
-              <button className="primary-btn">Get Started</button>
+              <button className="primary-btn"> 
+                <Link to="/services">Get Started</Link>
+              </button>
               <button className="secondary-btn">View Docs</button>
             </div>
           </div>
@@ -133,7 +135,8 @@ export default function Home() {
         {/* ================= CTA ================= */}
         <section className="cta">
           <h2>Ready to Protect Your APIs?</h2>
-          <button className="primary-btn">Start Free Trial</button>
+          <button className="primary-btn">
+            <Link to="/main">Start Free Trial</Link></button>
         </section>
       </div>
     </div>

@@ -1,44 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiKeyAPI } from '../../services/apiKeyAPI';
-import { authAPI } from '../../services/api';
 import Button from '../../components/button/Button';
 import './Main.css';
 
 const Main = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ target_url: '' });
-  const [apiKeys, setApiKeys] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
 
   // Fetch existing API keys on mount
-  useEffect(() => {
-    fetchApiKeys();
-  }, []);
-
-const getCurrentUser = async () => {
-        const res = await authAPI.getme('/auth/me');
-        return res.data;
-      };
-
-  const fetchApiKeys = async () => {
-    try {
-      const response = await apiKeyAPI.getAll();    
-
-    const user =  await getCurrentUser();
-
-    setApiKeys(
-      response.data.data.filter(key => key.userid === user.id)
-    );
-    } catch (error) {
-      console.error('Failed to fetch API keys:', error);
-    }
-  };
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -76,9 +50,6 @@ const getCurrentUser = async () => {
         fullKey: response.data.apikey,
         prefix: response.data.apikey.slice(0, 8)
       });
-
-      // Refresh API keys list
-      fetchApiKeys();
 
     } catch (error) {
       setError(
@@ -154,40 +125,6 @@ const getCurrentUser = async () => {
                 </div>
               </div>
             )}
-          </div>
-
-          {/* Existing API Keys */}
-          <div className="keys-section">
-            <div className="section-header">
-              <h2>Your API Keys ({apiKeys.length})</h2>
-              {apiKeys.length === 0 && (
-                <p className="empty-state">
-                  No API keys yet. Generate your first one above!
-                </p>
-              )}
-            </div>
-
-          <div className="keys-grid">
-            {Array.isArray(apiKeys)
-              ? apiKeys
-                  .map((key) => (
-                    <div key={key.id} className="key-card">
-                      <div className="key-info">                        
-                        <code className="key-prefix">Key : {key.prefix}...</code>
-                        <div className="key-meta">
-                          <span className="target-url">{key.target_url}</span>
-                          <span className="created-date">
-                            {new Date(key.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="key-status">
-                        <span className="status active">Active</span>
-                      </div>
-                    </div>
-                  ))
-              : null}
-          </div>
           </div>
         </div>
       </div>
