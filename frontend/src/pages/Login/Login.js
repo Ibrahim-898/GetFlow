@@ -61,7 +61,7 @@ const Login = () => {
       // Backend sets httpOnly cookie automatically
       console.log('✅ Login successful! Cookie & token stored');
       
-      navigate('/Main', { 
+      navigate('/', { 
         state: { 
           message: 'Welcome back! Login successful.' 
         } 

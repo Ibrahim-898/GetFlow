@@ -39,11 +39,9 @@ const Services = () => {
 
   const plans = [
     {
-      id: 'starter',
+      id: 'free',
       name: 'Starter',
       description: 'Perfect for small projects and testing',
-      monthlyPrice: 100,
-      yearlyPrice: 80,
       features: [
         '100 API requests/min',
         '1 API key',
@@ -52,8 +50,8 @@ const Services = () => {
         '7-day analytics',
         'Community access'
       ],
-      cta: 'Start Trial',
-      popular: false
+      cta: 'Free',
+      
     },
     {
       id: 'pro',
