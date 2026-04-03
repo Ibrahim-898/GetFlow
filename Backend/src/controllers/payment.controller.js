@@ -20,11 +20,15 @@ function success(req, res) {
 }
 
 function fail(req, res) {
-  res.send("Payment Failed");
+  // return res.status(200).json({message : "Payment Failed."})
+  
+   return res.redirect("http://localhost:3000/?payment=Failed");
+  // res.send("Payment Failed");
 }
 
 function cancel(req, res) {
-  res.send("Payment Cancelled");
+  return res.redirect("http://localhost:3000/?payment=cancel");
+  // res.send("Payment Cancel");
 }
 
 async function ipn(req, res) {

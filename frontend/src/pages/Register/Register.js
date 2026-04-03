@@ -143,7 +143,7 @@ const Register = () => {
             />
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
-
+{/* 
           <div className="form-group">
             <label htmlFor="role">Role *</label>
             <select
@@ -158,7 +158,7 @@ const Register = () => {
               <option value="admin">Admin</option>
             </select>
             {errors.role && <span className="error-message">{errors.role}</span>}
-          </div>
+          </div> */}
 
           <div className="form-group">
             <label htmlFor="password">Password *</label>

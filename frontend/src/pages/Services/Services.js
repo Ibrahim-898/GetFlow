@@ -69,7 +69,7 @@ const Services = () => {
         'Webhook alerts',
         'Team collaboration'
       ],
-      cta: 'Start Trial',
+      cta: 'Purchase',
       popular: true
     },
     {
@@ -89,7 +89,7 @@ const Services = () => {
         'Dedicated account manager',
         'On-premise option'
       ],
-      cta: 'Contact Sales',
+      cta: 'Purchase',
       popular: false
     }
   ];
@@ -103,7 +103,7 @@ const Services = () => {
           <div className="pricing-header">
             <h1 className="section-title">Simple, Transparent Pricing</h1>
             <p className="section-subtitle">
-              Choose the perfect plan for your needs. All plans include a 14-day free trial.
+              Choose the perfect plan for your needs.
             </p>
 
             <div className="billing-toggle">
