@@ -1,10 +1,14 @@
 const apiKeyService = require('../services/apiKey.service');
 const apikeyModel = require('../models/apiKey.model');
+const userModel = require('../models/user.model');
 
 
 async function registerApiKey(req,res){
     try{
     const userid = req.user.id;
+    if(!userid){
+        return res.status(400).json({message : "Please Login and try again"});
+    }
     const {target_url} = req.body;
     if(!target_url){
         return res.status(400).json({message: "targetUrl is required"});

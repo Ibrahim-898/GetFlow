@@ -1,6 +1,7 @@
 const SSLCommerzPayment = require('sslcommerz-lts');
 const User = require('../models/user.model');
 const Payment = require('../models/payment.model');
+const userModel =require('../models/user.model');
 const { Op } = require('sequelize');
 
 const store_id = process.env.SSLCZ_STORE_ID;
@@ -9,6 +10,7 @@ const is_live = false;
 
 
 const PLAN_CONFIG = {
+
   pro: {
     monthly: { price: 1000, duration: 1 },
     yearly: { price: 900, duration: 12 }
@@ -148,6 +150,8 @@ async function handleIPN(data) {
     console.error("IPN Error:", err.message);
   }
 }
+
+
 
 module.exports = {
   initPayment,

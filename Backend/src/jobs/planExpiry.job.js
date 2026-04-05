@@ -1,35 +1,32 @@
-// jobs/planExpiry.job.js
 const cron = require('node-cron');
 const User = require('../models/user.model');
+const { Op } = require('sequelize');
 
 function startPlanExpiryJob() {
   cron.schedule('0 * * * *', async () => {
-    // runs every hour
     console.log('Running plan expiry check...');
 
     try {
       const now = new Date();
 
-      const users = await User.findAll({
-        where: {
-          plan: 'pro',
-          planExpiresAt: {
-            [require('sequelize').Op.lt]: now
+      const [updatedCount] = await User.update(
+        {
+          plan: 'free',
+          planExpiresAt: null
+        },
+        {
+          where: {
+            plan: {
+              [Op.in]: ['pro', 'enterprise']
+            },
+            planExpiresAt: {
+              [Op.lt]: now
+            }
           }
         }
-      });
+      );
 
-      for (const user of users) {
-        await User.update(
-          {
-            plan: 'free',
-            planExpiresAt: null
-          },
-          { where: { id: user.id } }
-        );
-
-        console.log(`Downgraded user ${user.id}`);
-      }
+      console.log(`Downgraded ${updatedCount} users`);
 
     } catch (err) {
       console.error('Expiry job error:', err.message);

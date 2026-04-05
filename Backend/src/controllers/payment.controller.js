@@ -1,12 +1,31 @@
 const  {initPayment,handleIPN} = require('../services/payment.service');
+const handleSubscription = require('../services/subscription.service');
 
 async function initializePayment(req, res) {
   try {
     console.log("req body : ",req.body);
+    const userId = req.user.id;
     const payload = {
       ...req.body,
-      userId: req.user.id
+      userId,
     };
+    
+     const result = await handleSubscription(userId, payload.planId);
+
+    // ✅ Same active plan → redirect / notify
+    if (!result.allowed && result.type === "same_active") {
+      return res.status(400).json({
+        message: result.message
+      });
+    }
+
+    // ✅ Blocked cases
+    if (!result.allowed) {
+      return res.status(400).json({
+        message: result.message || "Not allowed"
+      });
+    }
+
     const url = await initPayment(payload);
     console.log("url : ",url);
     res.json({ url });

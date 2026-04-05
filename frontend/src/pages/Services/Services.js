@@ -1,41 +1,45 @@
 import React, { useState } from 'react';
 import Button from '../../components/button/Button';
+import { toast } from "react-toastify";
 import './Services.css';
 
 const Services = () => {
   const [billingCycle, setBillingCycle] = useState('monthly');
 
   const handlePayment = async (planId) => {
-    try {
-      
-      const token = localStorage.getItem("authToken"); // make sure user is logged in
-      console.log("token :",token);
+  try {
+    const token = localStorage.getItem("authToken");
 
-      const res = await fetch("http://localhost:8000/api/payment/init", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          planId,
-          billingCycle
-        })
-      });
+    const res = await fetch("http://localhost:8000/api/payment/init", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        planId,
+        billingCycle
+      })
+    });
 
-      const data = await res.json();
-      console.log("Data : ",data);
+    const data = await res.json();
 
-      if (data.url) {
-        window.location.href = data.url; // redirect to SSLCommerz
-      } else {
-        alert("Payment initialization failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error initiating payment");
+    if (!res.ok) {
+      toast.error(data.message || data.error || "Request failed");
+      return;
     }
-  };
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      toast.error("Payment URL not received");
+    }
+
+  } catch (err) {
+    console.error(err);
+    toast.error("Network or server error");
+  }
+};
 
   const plans = [
     {

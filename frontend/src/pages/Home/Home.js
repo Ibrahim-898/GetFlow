@@ -148,11 +148,11 @@ export default function Home() {
     if (paymentStatus) {
       let message = "";
       if (paymentStatus === "success") {
-        message = "✅ Payment Successful!";
+        message = "Payment Successful!";
       } else if (paymentStatus === "failed") {
-        message = "❌ Payment Failed!";
+        message = "Payment Failed!";
       } else if (paymentStatus === "cancelled") {
-        message = "⚠️ Payment Cancelled!";
+        message = "Payment Cancelled!";
       }
 
       if (message) {

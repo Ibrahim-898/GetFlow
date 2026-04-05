@@ -10,11 +10,15 @@ import Main from './pages/Main/Main'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Profile from './pages/Profile/Profile'
 import './App.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   return (
     <div className="app">
       <Navbar />
+       <ToastContainer position="top-right" autoClose={3000} />
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
