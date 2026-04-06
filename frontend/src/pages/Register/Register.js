@@ -7,7 +7,7 @@ import './Register.css';
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
+    companyname: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -30,10 +30,10 @@ const Register = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
+    if (!formData.companyname.trim()) {
+      newErrors.companyname = 'companyname is required';
+    } else if (formData.companyname.length < 3) {
+      newErrors.companyname = 'companyname must be at least 3 characters';
     }
     
     if (!formData.email) {
@@ -115,18 +115,18 @@ const Register = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="username">Username *</label>
+            <label htmlFor="companyname">Companyname *</label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              id="companyname"
+              name="companyname"
+              value={formData.companyname}
               onChange={handleChange}
               placeholder="john_doe"
-              className={errors.username ? 'error' : ''}
+              className={errors.companyname ? 'error' : ''}
               disabled={loading}
             />
-            {errors.username && <span className="error-message">{errors.username}</span>}
+            {errors.companyname && <span className="error-message">{errors.companyname}</span>}
           </div>
 
           <div className="form-group">
@@ -203,7 +203,7 @@ const Register = () => {
               <span className="strength-text">
                 {formData.password.length === 0 ? 'No password' :
                  formData.password.length < 4 ? 'Weak' :
-                 formData.password.length < 8 ? 'Fair' :
+                 formData.password.length >= 8 ? 'Fair' :
                  'Strong'}
               </span>
             </div>

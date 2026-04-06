@@ -1,11 +1,11 @@
-
-const authService = require('../services/auth.service')
+const authService = require('../services/auth.service');
+const  {varifyOtp}  = require('../services/otp.service');
 
 async function registerUser(req,res){
 
    try {
-    const {username,email,password,role ="user"} = req.body;
-    const user = await authService.RegisterService({username,email,password,role});
+    const {companyname,email,password,role ="user"} = req.body;
+    const user = await authService.RegisterService({companyname,email,password,role});
     res.status(201).json({message : "User Created Successfully",
         user
     }
@@ -42,7 +42,7 @@ async function UserProfile(req,res) {
     const userid = req.user.id;
     const user = await authService.getProfile(userid);
     res.status(200).json({
-      username: user.username,
+      companyname: user.companyname,
       email: user.email,
     });
     }
@@ -51,4 +51,31 @@ async function UserProfile(req,res) {
     }
     
 }
-module.exports = { registerUser,loginUser,UserProfile};
+async function forgetPassword(req,res) {
+    try{
+    const {email} = req.body;
+    const result = await authService.forgetPasswordService(email);
+    if(!result){
+        return res.status(400).json({message : "No User Found"});
+    }
+    return res.status(200).json({message : result.message});
+    }
+    catch(error){
+        return res.status(400).json({message : error.message});
+    }
+}
+async function updatePassword(req, res) {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    await varifyOtp(email, otp);
+    
+    await authService.updatePasswordService(email, newPassword);
+
+    return res.status(200).json({ message: "Password updated successfully" });
+
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+}
+module.exports = { registerUser,loginUser,UserProfile,forgetPassword,updatePassword};

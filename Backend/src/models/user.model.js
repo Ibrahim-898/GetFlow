@@ -8,7 +8,7 @@ const user = sequelize.define('users', {
         autoIncrement: true,
     },
 
-    username: {
+    companyname: {
         type: DataTypes.STRING(50),
         allowNull: false,
         unique: true

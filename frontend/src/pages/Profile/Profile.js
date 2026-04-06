@@ -51,16 +51,15 @@ const Profile = () => {
           userData = { name: innerData, email: '' };
         } else {
           userData = {
-            name: innerData.name || innerData.fullName || innerData.username || 'User',
+            name: innerData.name || innerData.fullName || innerData.companyname || 'User',
             email: innerData.email || '',
             bio: innerData.bio || '',
           };
         }
       } 
       else {
-        // Case 3: Normal object { name: "...", email: "..." }
         userData = {
-          name: responseData.name || responseData.fullName || responseData.username || 'User',
+          name: responseData.name || responseData.fullName || responseData.companyname || 'User',
           email: responseData.email || '',
           bio: responseData.bio || '',
         };
@@ -157,7 +156,7 @@ const Profile = () => {
 
           <div className="profile-form">
             <div className="form-group">
-              <label>Username</label>
+              <label>Companyname</label>
               {isEditing ? (
                 <input
                   type="text"
