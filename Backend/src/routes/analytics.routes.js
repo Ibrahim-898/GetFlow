@@ -6,5 +6,4 @@ const router = express.Router();
 
 router.get('/logs',authMiddleware,analyticsController.getLogs);
 
-
 module.exports = router;

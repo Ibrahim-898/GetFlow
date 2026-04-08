@@ -25,6 +25,7 @@ async function RegisterApiKeyService(userid,target_url) {
         throw new Error("Please Upgrade your Plan to Create More Api Keys");  
     }
 
+
     
     const apikey = await generateApiKey();
     const prefix = apikey.slice(0,8);
@@ -40,5 +41,22 @@ async function RegisterApiKeyService(userid,target_url) {
     return apikey;
     
 }
+async function apiKeyStatService(userId) {
+    const user = await userModel.findOne({where : {id : userId}});
+    if(!user){
+        throw new Error("User Not Found");
+    }
+    const activeKeys = await apikeyModel.count({where : {userid : userId,status : 'active'}});
 
-module.exports = {RegisterApiKeyService};
+    const maxKeys = planLimits[user.plan] || 0;
+    const remainingKeys = maxKeys - activeKeys;
+      return{
+      plan: user.plan,
+      maxKeys,
+      activeKeys,
+      remainingKeys
+    };
+    
+}
+
+module.exports = {RegisterApiKeyService,apiKeyStatService};

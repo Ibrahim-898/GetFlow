@@ -37,19 +37,53 @@
   gap: 30px;
 }
 
-/* Sections */
-.generate-section,
-.keys-section {
+/* Two-column layout for dashboard + generate section */
+.dashboard-generate-wrapper {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Stats Section */
+.dashboard-section {
+  flex: 1;
+  min-width: 250px;
   padding: 24px;
   border-radius: 16px;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 3px solid rgba(0,0,0,0.08);
+}
+
+/* Cards inside stats */
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dashboard-cards .card {
+  flex: 1 1 100px; /* responsive width */
+  padding: 16px;
+  border-radius: 12px;
+  border: 5px solid rgba(0,0,0,0.08);
+  background: #fafdfd;
+  text-align: center;
 }
 
 /* Section Titles */
 .generate-section h2,
-.keys-section h2 {
+.keys-section h2,
+.dashboard-section h2 {
   font-size: 20px;
   margin-bottom: 20px;
+}
+
+/* Generate API Key Section */
+.generate-section {
+  flex: 1;
+  min-width: 300px;
+  padding: 24px;
+  border-radius: 16px;
+  border: 3px solid rgba(3, 0, 159, 0.08);
 }
 
 /* Form */
@@ -149,7 +183,7 @@
   margin-top: 6px;
 }
 
-/* Grid */
+/* Grid for existing keys */
 .keys-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -195,4 +229,129 @@
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 11px;
+}
+
+/* ================= SECTION ================= */
+.manage-keys-section {
+  margin: 50px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.loading-text,
+.empty-text {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ================= TABLE ================= */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.modern-table thead {
+  background: #111827;
+  color: #ffffff;
+}
+
+.modern-table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.modern-table td {
+  padding: 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.modern-table tbody tr:hover {
+  background: #f9fafb;
+  transition: background 0.2s ease;
+}
+
+/* ================= KEY COLUMN ================= */
+.key-cell {
+  font-family: monospace;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* ================= STATUS BADGE ================= */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* ================= BUTTONS ================= */
+.btn-activate,
+.btn-deactivate {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-activate {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-activate:hover {
+  background: #1d4ed8;
+}
+
+.btn-deactivate {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.btn-deactivate:hover {
+  background: #dc2626;
+}
+
+/* Responsive: stack columns on small screens */
+@media (max-width: 768px) {
+  .dashboard-generate-wrapper {
+    flex-direction: column;
+  }
+
+  .dashboard-cards {
+    flex-direction: column;
+  }
 }

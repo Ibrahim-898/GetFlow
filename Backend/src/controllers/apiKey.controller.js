@@ -23,22 +23,52 @@ async function registerApiKey(req,res){
 
 }
 
-    async function getApiKey(req, res) {
-    try {
-        const apikeys = await apikeyModel.findAll({
-        });
-        res.status(200).json({
-        success: true,
-        data: apikeys
-        });
-    } catch (error) {
-        console.error(error);
+        async function getApiKey(req, res) {
+        try {
+            const userId = req.user.id;
+
+            const apikeys = await apikeyModel.findAll({
+            where: { userid: userId },
+            attributes: [
+                "id",
+                "prefix",
+                "status",
+                "rate_limit",
+                "createdAt",
+                "expire_at"
+            ],
+            order: [['createdAt', 'DESC']]
+            });
+            console.log(apikeys);
+            return res.status(200).json({
+            success: true,
+            data: apikeys
+            });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+            });
+        }
+        }
+
+    async function getApiKeyStats(req,res) {
+    try{
+    const userId = req.user.id;
+    console.log("userId :",userId);
+    const result = await apiKeyService.apiKeyStatService(userId);
+    console.log(result);
+    return res.status(200).json({data : result});
+    }catch(error){
+        console.log(error.message);
         res.status(500).json({
-        success: false,
-        message: 'Internal Server Error'
+        message: error.message
         });
     }
-    }
+    
+}
 
 
-module.exports = {registerApiKey,getApiKey};
+module.exports = {registerApiKey,getApiKey,getApiKeyStats};

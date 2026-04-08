@@ -7,7 +7,6 @@ const apikey = require("../models/apiKey.model");
 
 async function rateLimitMiddleware(req, res, next) {
   try {
-     
     const apiKey = req.headers["x-api-key"];
     if (!apiKey) {
       return res.status(400).json({ message: "API Key Required" });
@@ -48,6 +47,19 @@ async function rateLimitMiddleware(req, res, next) {
       const msg = result.limitType === "company"
                 ? "Company rate limit exceeded"
                 : "Client rate limit exceeded";
+                const elapsedHrTime = process.hrtime(startHrTime);
+                const responseTimeMs = Math.round(
+                elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6
+      );
+                 await logModel.create({
+                    apikey_id: record.id,
+                    ip_address: clientIp,
+                    method: req.method,
+                    endpoint: req.originalUrl,
+                    status_code: 429,
+                    rate_limit_hit: true,
+                    response_time_ms: responseTimeMs
+                  });
             return res.status(429).json({ message: msg });
     }
 

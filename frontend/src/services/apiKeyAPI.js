@@ -5,5 +5,6 @@ export const apiKeyAPI = {
   generate: (data) => api.post('/keys/register', data),
   
   // Get all API keys (public - adjust if needed)
-  getAll: () => api.get('/keys')
+  getAll: () => api.get('/keys'),
+  getStats: () => api.get('/keys/apiKeystat')
 };
