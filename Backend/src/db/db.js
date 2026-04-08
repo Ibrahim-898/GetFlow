@@ -8,14 +8,19 @@ const sequelize = new Sequelize({
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
+    pool: {
+    max: 10,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  logging: false
 })
 
 async function connectDB(){
     try{
     await sequelize.authenticate();
     console.log("Database Connect Successfully");
-    await sequelize.sync({ alter: true}); 
-    console.log("All tables synced");
     } catch(err){
         console.error("Database Connection Failed",err);
 
