@@ -20,19 +20,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  process.env.FRONTEND_URL
-];
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
+// Allow your frontend origin
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow Postman
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: FRONTEND_URL,
   credentials: true
 }));
 

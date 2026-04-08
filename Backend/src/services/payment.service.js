@@ -6,7 +6,8 @@ const { Op } = require('sequelize');
 
 const store_id = process.env.SSLCZ_STORE_ID;
 const store_passwd = process.env.SSLCZ_STORE_PASS;
-const is_live = false;
+const is_live = process.env.SSLCZ_LIVE === 'true'; 
+const BACKEND_URL = process.env.BACKEND_URL;
 
 
 const PLAN_CONFIG = {
@@ -55,10 +56,10 @@ async function initPayment(payload) {
     currency: 'BDT',
     tran_id: tranId,
 
-    success_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/success',
-    fail_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/fail',
-    cancel_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/cancel',
-    ipn_url: 'https://alexzander-postlarval-nathan.ngrok-free.dev/api/payment/ipn',
+    success_url: `${BACKEND_URL}/api/payment/success`,
+    fail_url: `${BACKEND_URL}/api/payment/fail`,
+    cancel_url: `${BACKEND_URL}/api/payment/cancel`,
+    ipn_url: `${BACKEND_URL}/api/payment/ipn`,
 
     product_name: `${payload.planId} subscription (${payload.billingCycle})`,
     product_category: 'Service',
@@ -95,10 +96,11 @@ async function handleIPN(data) {
       where: { transaction_id: tran_id }
     });
 
-    if (!payment) return;
+    if (!payment) return console.log("Payment record not found");
+    if (payment.status === 'success') return console.log("Already processed");
 
     const user = await User.findByPk(payment.user_id);
-    if (!user) return;
+    if (!user) return console.log("User not found");
 
     if (status === 'VALID' || status === 'VALIDATED') {
 
