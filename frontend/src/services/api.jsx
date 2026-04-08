@@ -41,8 +41,8 @@ export const authAPI = {
   login: (data) => api.post('/auth/login', data),
   logout: () => api.post('/auth/logout'),  // Backend should clear cookie
   getme:() => api.get('/auth/me'),
-  get_analytics:() => api.get('/analytics/logs'),
-  getProfile: () => api.get('/auth/profile'),
+  get_analytics:() => api.get('analytics/logs'),
+  getProfile: () => api.get('auth/profile'),
   forgetPassword: (email) => api.post('/auth/forget-password',{email}),
   updatePassword: (data) => api.post('/auth/update-password',data),
 };
