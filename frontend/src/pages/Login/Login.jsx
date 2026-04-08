@@ -135,12 +135,8 @@ const Login = () => {
           </div>
 
           <div className="form-options">
-            <label className="checkbox-label">
-              <input type="checkbox" name="rememberMe" />
-              <span className="checkmark"></span>
-              Remember me
-            </label>
-            <Link to="/forgot-password" className="forgot-link">Forgot password?</Link>
+    
+            <Link to="/forget-password" className="forgot-link">Forget password?</Link>
           </div>
 
           <Button type="submit" fullWidth size="large" disabled={loading}>

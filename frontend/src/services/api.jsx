@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8000/api"
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -40,9 +40,11 @@ export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
   logout: () => api.post('/auth/logout'),  // Backend should clear cookie
-  getme:() => api.get('auth/me'),
-  get_analytics:() => api.get('analytics/logs'),
-  getProfile: () => api.get('auth/profile'),
+  getme:() => api.get('/auth/me'),
+  get_analytics:() => api.get('/analytics/logs'),
+  getProfile: () => api.get('/auth/profile'),
+  forgetPassword: (email) => api.post('/auth/forget-password',{email}),
+  updatePassword: (data) => api.post('/auth/update-password',data),
 };
 
 export default api;

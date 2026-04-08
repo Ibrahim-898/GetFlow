@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.routes');
@@ -19,9 +20,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
 // Allow your frontend origin
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: FRONTEND_URL,
   credentials: true
 }));
 

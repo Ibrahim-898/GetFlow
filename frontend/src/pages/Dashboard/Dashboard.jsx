@@ -29,11 +29,8 @@ const Dashboard = () => {
   const fetchApiKeys = async () => {
     try {
       const response = await apiKeyAPI.getAll();
-      const user = await getCurrentUser();
 
-      const userKeys = response.data.data.filter(
-        (key) => key.userid === user.id || key.userId === user.id
-      );
+      const userKeys = response.data.data;
 
       setApiKeys(userKeys);
     } catch (error) {

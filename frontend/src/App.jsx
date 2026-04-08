@@ -9,6 +9,8 @@ import Services from './pages/Services/Services';
 import Main from './pages/Main/Main'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Profile from './pages/Profile/Profile'
+import ForgetPassword from './pages/ForgetPassword/ForgetPassword';
+import UpdatePassword from './pages/UpdatePassword/UpdatePassword';
 import './App.css';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,6 +30,9 @@ function App() {
           <Route path="/main" element={<Main />} />
           <Route path="/dashboard" element={<Dashboard />} />          
           <Route path="/profile" element={<Profile />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
+
         </Routes>
       </main>
       <Footer />

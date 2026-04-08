@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '../../components/button/Button';
 import { toast } from "react-toastify";
 import './Services.css';
+import api from '../../services/api';
 
 const Services = () => {
   const [billingCycle, setBillingCycle] = useState('monthly');
@@ -10,7 +11,7 @@ const Services = () => {
   try {
     const token = localStorage.getItem("authToken");
 
-    const res = await fetch("http://localhost:8000/api/payment/init", {
+    const res = await fetch(`${api}/payment/init`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

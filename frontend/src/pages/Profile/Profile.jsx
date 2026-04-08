@@ -134,24 +134,7 @@ const Profile = () => {
         <div className="profile-card">
           <div className="profile-card-header">
             <h2>Personal Information</h2>
-            {!isEditing ? (
-              <button 
-                onClick={() => setIsEditing(true)}
-                className="edit-btn"
-              >
-                <Edit2 size={18} />
-                Edit Profile
-              </button>
-            ) : (
-              <div className="edit-actions">
-                <button onClick={handleSave} className="save-btn">
-                  <Save size={18} /> Save
-                </button>
-                <button onClick={handleCancel} className="cancel-btn">
-                  <X size={18} /> Cancel
-                </button>
-              </div>
-            )}
+        
           </div>
 
           <div className="profile-form">
