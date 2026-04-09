@@ -6,7 +6,7 @@ import { apiKeyAPI } from '../../services/apiKeyAPI';
 
 const Dashboard = () => {
   const [logs, setLogs] = useState([]);
-  const [apiKeys, setApiKeys] = useState([]);
+  const [ setApiKeys] = useState([]);
   const [requestsPerMinute, setRequestsPerMinute] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
