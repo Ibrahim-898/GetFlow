@@ -11,6 +11,11 @@ const Payment = sequelize.define('payments', {
   user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    onDelete: 'CASCADE'
   },
 
   transaction_id: {
@@ -21,28 +26,36 @@ const Payment = sequelize.define('payments', {
 
   val_id: {
     type: DataTypes.STRING,
-    allowNull: true,
   },
 
   amount: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
+
   plan: {
     type: DataTypes.STRING,
   },
-billingCycle: {
-    type :DataTypes.STRING,
-},
 
-  status: {
-    type: DataTypes.ENUM('pending', 'success', 'failed', 'cancelled'),
-    defaultValue: 'pending',
+  billingCycle: {
+    type: DataTypes.STRING,
   },
 
+  status: {
+    type: DataTypes.STRING,
+    defaultValue: 'pending',
+    validate: {
+      isIn: [['pending', 'success', 'failed', 'cancelled']]
+    }
+  },
+
+ 
 }, {
   timestamps: true,
-  freezeTableName: true
+  freezeTableName: true,
+  indexes: [
+    { fields: ['user_id'] }
+  ]
 });
 
 module.exports = Payment;
