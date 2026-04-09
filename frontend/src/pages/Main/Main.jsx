@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import  { useState, useEffect } from 'react';
 import { apiKeyAPI } from '../../services/apiKeyAPI';
 import { authAPI } from '../../services/api';
 import Button from '../../components/button/Button';
 import './Main.css';
 
 const Main = () => {
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({ target_url: '' });
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState('');

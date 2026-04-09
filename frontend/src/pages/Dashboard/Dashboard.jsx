@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Dashboard.css';
-
-// Import your API services (adjust paths if needed)
 import api from '../../services/api';
-import { authAPI } from '../../services/api';
 import { apiKeyAPI } from '../../services/apiKeyAPI';
 
 const Dashboard = () => {
@@ -14,32 +11,19 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Fetch current logged-in user
-  const getCurrentUser = async () => {
-    try {
-      const res = await authAPI.getme('/auth/me');
-      return res.data;
-    } catch (err) {
-      console.error('Failed to get current user:', err);
-      throw err;
-    }
-  };
-
-  // Fetch API Keys (filtered by current user)
-  const fetchApiKeys = async () => {
+  // Fetch API Keys
+  const fetchApiKeys = useCallback(async () => {
     try {
       const response = await apiKeyAPI.getAll();
-
       const userKeys = response.data.data;
       setApiKeys(userKeys);
-    } catch (error) {
-      console.error('Failed to fetch API keys:', error);
-      // Don't block the whole dashboard if API keys fail
+    } catch (err) {
+      console.error('Failed to fetch API keys:', err);
     }
-  };
+  }, []);
 
   // Fetch Logs
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -55,27 +39,22 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  // Process logs for chart (Requests Per Minute)
+  // Process logs for chart
   const processRequestsPerMinute = (logsData) => {
     const counts = {};
-
     logsData.forEach((log) => {
       if (!log.createdAt) return;
       const d = new Date(log.createdAt);
       const key = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes()
         .toString()
         .padStart(2, '0')}`;
-
       counts[key] = (counts[key] || 0) + 1;
     });
 
     const chartData = Object.keys(counts)
-      .map((time) => ({
-        time,
-        requests: counts[time],
-      }))
+      .map((time) => ({ time, requests: counts[time] }))
       .sort((a, b) => a.time.localeCompare(b.time));
 
     setRequestsPerMinute(chartData);
@@ -85,7 +64,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchLogs();
     fetchApiKeys();
-  }, []);
+  }, [fetchLogs, fetchApiKeys]); // ✅ include callbacks in dependencies
 
   return (
     <div className="dashboard-page">
@@ -120,112 +99,81 @@ const Dashboard = () => {
           </div>
         )}
 
-
-        {/* Logs List */}
+        {/* Logs Table & Summary */}
         <div className="logs-section">
-  <h2>Recent Logs</h2>
-  
-  <div className="logs-layout">
-    {/* LEFT: 70% - Logs Table */}
-    <div className="logs-table-container">
-      {logs.length > 0 ? (
-        <table className="logs-table">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Method</th>
-              <th>Endpoint</th>
-              <th>IP Address</th>
-              <th>API Key ID</th>
-              <th>Response Time</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log.id}>
-                <td>
-                  <span
-                    className={`status-code ${
-                      log.status_code >= 400 ? 'error' : 'success'
-                    }`}
-                  >
-                    {log.status_code}
+          <h2>Recent Logs</h2>
+          <div className="logs-layout">
+            <div className="logs-table-container">
+              {logs.length > 0 ? (
+                <table className="logs-table">
+                  <thead>
+                    <tr>
+                      <th>Status</th>
+                      <th>Method</th>
+                      <th>Endpoint</th>
+                      <th>IP Address</th>
+                      <th>API Key ID</th>
+                      <th>Response Time</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {logs.map((log) => (
+                      <tr key={log.id}>
+                        <td>
+                          <span
+                            className={`status-code ${
+                              log.status_code >= 400 ? 'error' : 'success'
+                            }`}
+                          >
+                            {log.status_code}
+                          </span>
+                          {log.rate_limit_hit && (
+                            <span className="rate-limit">Rate Limited</span>
+                          )}
+                        </td>
+                        <td className="method">{log.method}</td>
+                        <td className="endpoint">{log.endpoint}</td>
+                        <td className="ip-address">{log.ip_address || 'N/A'}</td>
+                        <td className="apikey-id">{log.apikey_id || 'N/A'}</td>
+                        <td className="response-time">
+                          {log.response_time_ms || 0} ms
+                        </td>
+                        <td className="timestamp">
+                          {new Date(log.createdAt).toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                !loading && <p className="no-data">No logs available yet.</p>
+              )}
+            </div>
+
+            <div className="logs-summary">
+              <h3>API Usage Summary</h3>
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <span className="stat-number">{logs.length}</span>
+                  <span className="stat-label">Total Requests</span>
+                </div>
+                <div className="stat-card">
+                  <span className="stat-number success-count">
+                    {logs.filter((l) => l.status_code < 400).length}
                   </span>
-                  {log.rate_limit_hit && (
-                    <span className="rate-limit">Rate Limited</span>
-                  )}
-                </td>
-                <td className="method">{log.method}</td>
-                <td className="endpoint">{log.endpoint}</td>
-                <td className="ip-address">{log.ip_address || 'N/A'}</td>
-                <td className="apikey-id">{log.apikey_id || 'N/A'}</td>
-                <td className="response-time">
-                  {log.response_time_ms || 0} ms
-                </td>
-                <td className="timestamp">
-                  {new Date(log.createdAt).toLocaleString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        !loading && <p className="no-data">No logs available yet.</p>
-      )}
-    </div>
-
-    {/* RIGHT: 30% - Summary Statistics & Chart */}
-    <div className="logs-summary">
-      <h3>API Usage Summary</h3>
-      
-      <div className="stats-grid">
-        <div className="stat-card">
-          <span className="stat-number">{logs.length}</span>
-          <span className="stat-label">Total Requests</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-number success-count">
-            {logs.filter(l => l.status_code < 400).length}
-          </span>
-          <span className="stat-label">Successful</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-number error-count">
-            {logs.filter(l => l.status_code >= 400).length}
-          </span>
-          <span className="stat-label">Errors</span>
-        </div>
-      </div>
-
-      {/* Success vs Error Visual */}
-      {/* <div className="chart-container">
-        <h4>Success vs Error Rate</h4>
-        <div className="pie-visual">
-          <div 
-            className="pie success-slice" 
-            style={{
-              '--success-percent': 
-                logs.length > 0 
-                  ? Math.round((logs.filter(l => l.status_code < 400).length / logs.length) * 100) 
-                  : 0
-            }}
-          ></div>
-        </div>
-        <div className="legend">
-          <div className="legend-item">
-            <span className="dot success-dot"></span>
-            Success
-          </div>
-          <div className="legend-item">
-            <span className="dot error-dot"></span>
-            Error
+                  <span className="stat-label">Successful</span>
+                </div>
+                <div className="stat-card">
+                  <span className="stat-number error-count">
+                    {logs.filter((l) => l.status_code >= 400).length}
+                  </span>
+                  <span className="stat-label">Errors</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div> */}
-    </div>
-  </div>
-</div>
       </div>
     </div>
   );
