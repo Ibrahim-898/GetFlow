@@ -31,7 +31,6 @@ const Dashboard = () => {
       const response = await apiKeyAPI.getAll();
 
       const userKeys = response.data.data;
-
       setApiKeys(userKeys);
     } catch (error) {
       console.error('Failed to fetch API keys:', error);
@@ -121,47 +120,6 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* API Keys Section */}
-        <div className="keys-section">
-  <h2>Your API Keys</h2>
-
-  {apiKeys.length > 0 ? (
-    <div className="table-container">
-      <table className="api-keys-table">
-        <thead>
-          <tr>
-            <th>API Key</th>
-            <th>Target URL</th>
-            <th>Created</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {apiKeys.map((key) => (
-            <tr key={key.id}>
-              <td>
-                <code className="key-prefix">
-                  {key.prefix ? `${key.prefix}...` : 'N/A'}
-                </code>
-              </td>
-              <td className="target-url">
-                {key.target_url || key.targetUrl || 'No target URL'}
-              </td>
-              <td className="created-date">
-                {new Date(key.createdAt).toLocaleDateString()}
-              </td>
-              <td>
-                <span className="status active">Active</span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  ) : (
-    <p>No API keys found.</p>
-  )}
-</div>
 
         {/* Logs List */}
         <div className="logs-section">
@@ -241,7 +199,7 @@ const Dashboard = () => {
       </div>
 
       {/* Success vs Error Visual */}
-      <div className="chart-container">
+      {/* <div className="chart-container">
         <h4>Success vs Error Rate</h4>
         <div className="pie-visual">
           <div 
@@ -264,7 +222,7 @@ const Dashboard = () => {
             Error
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   </div>
 </div>

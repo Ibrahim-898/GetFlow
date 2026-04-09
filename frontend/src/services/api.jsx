@@ -45,6 +45,7 @@ export const authAPI = {
   getProfile: () => api.get('auth/profile'),
   forgetPassword: (email) => api.post('/auth/forget-password',{email}),
   updatePassword: (data) => api.post('/auth/update-password',data),
+  updateKeyStatus: (keyId, data) => api.put(`keys/apikey/${keyId}/status`, data),
 };
 
 export default api;

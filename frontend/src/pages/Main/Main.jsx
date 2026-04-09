@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiKeyAPI } from '../../services/apiKeyAPI';
+import { authAPI } from '../../services/api';
 import Button from '../../components/button/Button';
 import './Main.css';
 
@@ -58,8 +59,7 @@ const Main = () => {
   const toggleKeyStatus = async (keyId, currentStatus) => {
     try {
       const newStatus = currentStatus === "active" ? "inactive" : "active";
-
-      await apiKeyAPI.updateKeyStatus(keyId, { status: newStatus });
+      await authAPI.updateKeyStatus(keyId, { status: newStatus });
 
       setKeys((prev) =>
         prev.map((key) =>

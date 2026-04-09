@@ -120,7 +120,7 @@ export default function Home() {
               <button className="primary-btn">
                 <Link to="/services">Get Started</Link>
               </button>
-              <button className="secondary-btn">View Docs</button>
+              {/* <button className="secondary-btn">View Docs</button> */}
             </div>
           </div>
           <div className="hero-right">

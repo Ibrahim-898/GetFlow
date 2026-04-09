@@ -99,7 +99,7 @@
   position: relative;
 }
 
-.hero-right::after {
+/* .hero-right::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -109,7 +109,7 @@
   background: #f1f5f9;
   transition: var(--transition);
   z-index: 100;
-}
+} */
 
 /* ================= BUTTONS ================= */
 
@@ -157,7 +157,7 @@
 .features {
   padding: 100px 10%;
   text-align: center;
-  background: #beffe3;
+  background: #d4feeb83;
 }
 
 .features h2 {

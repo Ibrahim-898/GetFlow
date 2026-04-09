@@ -33,6 +33,13 @@ app.use('/api/keys',apiKeyRoutes);
 app.use('/api/analytics',analyticsRoutes);
 app.use('/api/payment',paymentRoutes);
 app.use('/gateway',gatewayRoutes);
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    uptime: process.uptime(),
+    timestamp: new Date()
+  });
+});
 
 
 app.use(errorHandler);

@@ -59,4 +59,17 @@ async function apiKeyStatService(userId) {
     
 }
 
-module.exports = {RegisterApiKeyService,apiKeyStatService};
+
+async function updateApiKeyStatusService(userId, keyId, newStatus) {
+  const key = await apikeyModel.findOne({
+    where: { id: keyId, userid: userId },
+  });
+
+  if (!key) throw new Error("API key not found");
+
+  key.status = newStatus;
+  await key.save();
+
+  return key;
+}
+module.exports = {RegisterApiKeyService,apiKeyStatService,updateApiKeyStatusService};

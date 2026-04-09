@@ -14,31 +14,31 @@ const Footer = () => {
               </svg>
               <span>GetFlow</span>
             </Link>
-            <p className="footer-description">
+            {/* <p className="footer-description">
               Enterprise-grade API rate limiting solution for modern applications.
-            </p>
+            </p> */}
           </div>
 
           <div className="footer-links">
             <div className="footer-section">
               <h4>Product</h4>
               <Link to="/services">Features</Link>
-              <Link to="/services">Pricing</Link>
-              <Link to="/services">Enterprise</Link>
+              {/* <Link to="/services">Pricing</Link>
+              <Link to="/services">Enterprise</Link> */}
             </div>
             
             <div className="footer-section">
               <h4>Resources</h4>
               <a href="#documentation">Documentation</a>
-              <a href="#api">API Reference</a>
-              <a href="#guides">Guides</a>
+              {/* <a href="#api">API Reference</a>
+              <a href="#guides">Guides</a> */}
             </div>
             
             <div className="footer-section">
               <h4>Company</h4>
               <a href="#about">About</a>
-              <a href="#blog">Blog</a>
-              <a href="#contact">Contact</a>
+              {/* <a href="#blog">Blog</a>
+              <a href="#contact">Contact</a> */}
             </div>
           </div>
         </div>
