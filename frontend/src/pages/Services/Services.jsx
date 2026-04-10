@@ -14,9 +14,8 @@ const Services = () => {
         billingCycle,
       }
       );
-      console.log(res);
       const data = res.data;
-      console.log("data : ",data);
+
 
       if (data.url) {
         window.location.href = data.url;

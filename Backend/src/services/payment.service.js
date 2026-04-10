@@ -80,14 +80,12 @@ async function initPayment(payload) {
 
   const response = await sslcz.init(data);
 
-  console.log("SSL Response:", response.GatewayPageURL);
 
   return response.GatewayPageURL;
 }
 
 
 async function handleIPN(data) {
-  console.log("IPN Data:", data);
 
   try {
     const { status, tran_id, val_id } = data;

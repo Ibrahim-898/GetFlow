@@ -50,7 +50,6 @@ const Login = () => {
     try {
       // Backend expects email + password
       const response = await authAPI.login(formData);
-      console.log(response.data.token);
       // Store token from JSON response (for API calls)
       if (response.data.token) {
         localStorage.setItem('authToken', response.data.token);
@@ -58,8 +57,7 @@ const Login = () => {
       
       window.dispatchEvent(new Event('authChange'));
       
-      // Backend sets httpOnly cookie automatically
-      console.log('✅ Login successful! Cookie & token stored');
+
       
       navigate('/', { 
         state: { 

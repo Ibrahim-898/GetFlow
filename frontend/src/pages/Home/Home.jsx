@@ -63,7 +63,6 @@ export default function Home() {
 
   // Spline load handler
   const handleSplineLoad = () => {
-    console.log("Spline scene loaded successfully!");
     setLoading(false);
   };
 
