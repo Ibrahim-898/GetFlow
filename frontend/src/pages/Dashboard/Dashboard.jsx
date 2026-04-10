@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Dashboard.css';
-import api from '../../services/api';
 import { apiKeyAPI } from '../../services/apiKeyAPI';
+import { analyticsAPI } from '../../services/analytics';
 
 const Dashboard = () => {
   const [logs, setLogs] = useState([]);
@@ -28,7 +28,7 @@ const Dashboard = () => {
       setLoading(true);
       setError('');
 
-      const res = await api.get('/analytics/logs');
+      const res = await analyticsAPI.getAnalytics();
       const logsData = res.data.data || res.data || [];
 
       setLogs(logsData);

@@ -50,7 +50,7 @@ const Login = () => {
     try {
       // Backend expects email + password
       const response = await authAPI.login(formData);
-      
+      console.log(response.data.token);
       // Store token from JSON response (for API calls)
       if (response.data.token) {
         localStorage.setItem('authToken', response.data.token);

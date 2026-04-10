@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../services/api";
+import { authAPI } from "../../services/api";
 import './Profile.css';
 
 const Profile = () => {
@@ -12,7 +12,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get("/auth/profile");
+        const response = await authAPI.getProfile();
         const data = response.data.data || response.data;
 
         setUser({

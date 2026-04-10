@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8000/api"
+const API_BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8000"
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -37,15 +37,15 @@ api.interceptors.response.use(
 );
 
 export const authAPI = {
-  register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data),
-  logout: () => api.post('/auth/logout'),  // Backend should clear cookie
-  getme:() => api.get('/auth/me'),
-  get_analytics:() => api.get('analytics/logs'),
-  getProfile: () => api.get('auth/profile'),
-  forgetPassword: (email) => api.post('/auth/forget-password',{email}),
-  updatePassword: (data) => api.post('/auth/update-password',data),
-  updateKeyStatus: (keyId, data) => api.put(`keys/apikey/${keyId}/status`, data),
+  register: (data) => api.post('api/auth/register', data),
+  login: (data) => api.post('api/auth/login', data),
+  logout: () => api.post('api/auth/logout'),  // Backend should clear cookie
+  getme:() => api.get('api/auth/me'),
+  get_analytics:() => api.get('api/analytics/logs'),
+  getProfile: () => api.get('api/auth/profile'),
+  forgetPassword: (email) => api.post('api/auth/forget-password',{email}),
+  updatePassword: (data) => api.post('api/auth/update-password',data),
+  updateKeyStatus: (keyId, data) => api.put(`api/keys/apikey/${keyId}/status`, data),
 };
 
 export default api;

@@ -2,19 +2,21 @@ import React, { useState } from "react";
 import Button from "../../components/button/Button";
 import { toast } from "react-toastify";
 import "./Services.css";
-import api from "../../services/api";
+import { paymentAPI } from "../../services/payment";
 
 const Services = () => {
   const [billingCycle, setBillingCycle] = useState("monthly");
 
   const handlePayment = async (planId) => {
     try {
-      const res = await api.post("/payment/init", {
+      const res = await paymentAPI.initPayment({
         planId,
         billingCycle,
-      });
-
+      }
+      );
+      console.log(res);
       const data = res.data;
+      console.log("data : ",data);
 
       if (data.url) {
         window.location.href = data.url;

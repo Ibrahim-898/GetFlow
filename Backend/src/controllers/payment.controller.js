@@ -6,6 +6,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 async function initializePayment(req, res) {
   try {
     const userId = req.user.id;
+    console.log(req.body);
     const payload = {
       ...req.body,
       userId,
@@ -31,6 +32,7 @@ async function initializePayment(req, res) {
     console.log("url : ",url);
     res.json({ url });
   } catch (err) {
+    console.log("error",error.message);
     res.status(500).json({ error: err.message });
   }
 }
