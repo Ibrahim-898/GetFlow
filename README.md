@@ -29,26 +29,9 @@ GetFlow provides:
 - ⏳ Automated subscription expiry system  
 
 ---
+## 🏗️ System Architecture
 
-# 🏗️ System Architecture
-
-```
-API Consumer
-      ↓
-API Gateway (Express)
-      ↓
-JWT Authentication
-      ↓
-API Key Validation
-      ↓
-Redis Rate Limiter
-      ↓
-Backend Services
-      ↓
-PostgreSQL Database
-      ↓
-Analytics Dashboard (React)
-```
+![GetFlow Architecture](./docs/getFlow-architecture.png)
 
 Background Services:
 - ⏳ Cron Job → Plan Expiry Handler  
