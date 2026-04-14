@@ -285,11 +285,8 @@ redis-server
 # 👨‍💻 Author
 
 Md.Ibrahim Khalilulla.
-
 An aspiring software engineer.
-
 B.Sc in Information and Communication Engineering,University of Rajshahi.
-
 Rajshahi, Bangladesh 
 
 ## 🤝 Acknowledgements
