@@ -296,7 +296,3 @@ Rajshahi, Bangladesh
 Project: GetFlow – API Management & Monetization Platform  
 
 ---
-
-# 📜 License
-
-ISC License
