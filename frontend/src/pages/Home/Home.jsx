@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Spline from '@splinetool/react-spline';
