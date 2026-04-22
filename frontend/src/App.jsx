@@ -34,7 +34,6 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
-
         </Routes>
       </main>
       <Footer />

@@ -45,6 +45,15 @@ const apikey = sequelize.define('apikeys',{
         type: DataTypes.DATE,
         allowNull: true,
     },
+    tableName :{
+        type : DataTypes.STRING,
+        allowNull : true,
+    },
+    clientSecret: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: () => require('crypto').randomBytes(32).toString('hex')
+    }
 },
     {
         freezeTableName : true,

@@ -12,31 +12,28 @@ const Navbar = () => {
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
   const navigate = useNavigate();
 
-  // Check auth token + fetch profile
+  // AUTH CHECK
   useEffect(() => {
     const checkAuthAndFetchProfile = async () => {
       const token = localStorage.getItem('authToken');
       const isAuth = !!token;
-      
+
       setIsLoggedIn(isAuth);
 
       if (isAuth) {
         setIsProfileLoading(true);
         try {
-          // Assuming your authAPI has a method for profile, or use axios/fetch directly
-          const response = await authAPI.getProfile(); // or fetch('/api/auth/profile', { headers: { Authorization: `Bearer ${token}` } })
-          
+          const response = await authAPI.getProfile();
           const userName = response.data.username;
-          
+
           if (userName) {
             setUserInitial(userName.charAt(0).toUpperCase());
           }
         } catch (error) {
-          console.error('Failed to fetch user profile:', error);
-          // Optional: If profile fetch fails, you can still keep user logged in or logout
-          // setIsLoggedIn(false);
+          console.log('Profile fetch failed');
         } finally {
           setIsProfileLoading(false);
         }
@@ -47,25 +44,23 @@ const Navbar = () => {
 
     checkAuthAndFetchProfile();
 
-    // Listen for auth changes (e.g. after login/logout)
-    const handleAuthChange = () => {
-      checkAuthAndFetchProfile();
-    };
+    const handleAuthChange = () => checkAuthAndFetchProfile();
 
     window.addEventListener('authChange', handleAuthChange);
     window.addEventListener('storage', handleAuthChange);
 
     return () => {
-      window.removeEventListener('storage', handleAuthChange);
       window.removeEventListener('authChange', handleAuthChange);
+      window.removeEventListener('storage', handleAuthChange);
     };
   }, []);
 
+  // LOGOUT
   const handleLogout = async () => {
     try {
       await authAPI.logout();
-    } catch (error) {
-      console.log('Logout API failed, clearing local state');
+    } catch (err) {
+      console.log('Logout API failed');
     } finally {
       localStorage.removeItem('authToken');
       setIsLoggedIn(false);
@@ -75,34 +70,25 @@ const Navbar = () => {
     }
   };
 
-  // Scroll effect (unchanged)
+  // SCROLL HIDE/SHOW
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setShowNavbar(false);
-      } else {
-        setShowNavbar(true);
-      }
-
+      setShowNavbar(!(currentScrollY > lastScrollY && currentScrollY > 100));
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll);
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // Profile Avatar Component
   const ProfileAvatar = () => (
-    <div className="profile-avatar" title="Profile">
+    <div className="profile-avatar">
       {isProfileLoading ? (
         <div className="avatar-circle loading">...</div>
       ) : userInitial ? (
-        <div className="avatar-circle">
-          {userInitial}
-        </div>
+        <div className="avatar-circle">{userInitial}</div>
       ) : (
         <User size={20} />
       )}
@@ -112,61 +98,65 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${showNavbar ? 'visible' : 'hidden'}`}>
       <div className="container navbar-container">
+
+        {/* BRAND */}
         <Link to="/" className="navbar-brand">
-          <svg className="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
           <span>GetFlow</span>
         </Link>
 
-        <button 
+        {/* MENU TOGGLE */}
+        <button
           className={`menu-toggle ${isMenuOpen ? 'active' : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
 
+        {/* LINKS */}
         <div className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
+
           <div className="navbar-links">
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/services" className="nav-link">Services</Link>
-          </div>          
-          
+
+          </div>
+
+          {/* AUTH SECTION */}
           <div className="navbar-auth">
+
             {isLoggedIn ? (
               <>
                 <Link to="/dashboard" className="nav-link">Dashboard</Link>
-                <Link to="/main" className="nav-link">Create Apikey</Link>
-                
-                {/* Profile Link */}
+                <Link to="/main" className="nav-link">API Key</Link>
+
+                {/* PROFILE */}
                 <Link to="/profile" className="profile-link">
                   <ProfileAvatar />
                 </Link>
 
-                <button 
+                <button
                   onClick={handleLogout}
                   className="btn btn-outline flex items-center gap-2"
-                  title="Logout"
                 >
                   <LogOut size={18} />
-                  <span>Logout</span>      
+                  Logout
                 </button>
               </>
             ) : (
               <>
-                <Link 
-                  to="/login" 
-                  className="btn btn-outline flex items-center gap-2"
-                >
+                <Link to="/login" className="btn btn-outline flex items-center gap-2">
                   <LogIn size={18} />
                   Login
                 </Link>
-                <Link to="/register" className="btn btn-primary">Register</Link>
+
+                <Link to="/register" className="btn btn-primary">
+                  Register
+                </Link>
               </>
             )}
+
           </div>
         </div>
       </div>
