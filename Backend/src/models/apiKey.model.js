@@ -44,10 +44,6 @@ const apikey = sequelize.define('apikeys',{
     expire_at: {
         type: DataTypes.DATE,
         allowNull: true,
-    },
-    tableName :{
-        type : DataTypes.STRING,
-        allowNull : true,
     }
 },
     {
