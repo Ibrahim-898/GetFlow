@@ -9,6 +9,7 @@ import Services from './pages/Services/Services';
 import Main from './pages/Main/Main'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Profile from './pages/Profile/Profile'
+import  Authtable from './pages/Authtable/Authtable';
 import ForgetPassword from './pages/ForgetPassword/ForgetPassword';
 import UpdatePassword from './pages/UpdatePassword/UpdatePassword';
 import Docs from './pages/Docs/Docs';
@@ -32,6 +33,7 @@ function App() {
           <Route path="/main" element={<Main />} />
           <Route path="/dashboard" element={<Dashboard />} />          
           <Route path="/profile" element={<Profile />} />
+          <Route path="/Authtable" element={<Authtable />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
         </Routes>

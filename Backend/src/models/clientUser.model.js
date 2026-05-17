@@ -2,7 +2,7 @@ const { sequelize } = require('../db/db');
 const { DataTypes } = require('sequelize');
 const apikey = require('./apiKey.model');
 
-const clientUsers = sequelize.define('clientUsers', {
+const clientUsers = sequelize.define('clientusers', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

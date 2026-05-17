@@ -201,10 +201,17 @@ async function clientUserUpdatePasswordService(email,newPassword) {
 }
 
 
-
+async function  getClientUser(apiKeyId) {
+    console.log("service ApikeyId",apiKeyId);
+    const record =await clientUserModel.findAll({where : {apiKeyId :apiKeyId} });
+    if(!record){
+         throw new Error("There is no Table of this Client.")
+    }
+    return record;  
+}
 
 
 
 module.exports = {RegisterService,LoginService,getProfile,forgetPasswordService,updatePasswordService,
-    ClientUserRegisterService,clientUserUpdatePasswordService,ClientUserForgetPasswordService,ClientUserLoginService
+    ClientUserRegisterService,clientUserUpdatePasswordService,ClientUserForgetPasswordService,ClientUserLoginService,getClientUser
 };

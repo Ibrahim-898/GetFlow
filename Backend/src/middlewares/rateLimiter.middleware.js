@@ -6,8 +6,10 @@ const logModel = require('../models/log.model');
 const apikey = require("../models/apiKey.model");
 
 async function rateLimitMiddleware(req, res, next) {
+  console.log(req.headers);
   try {
     const apiKey = req.headers["x-api-key"];
+    console.log("lm : ",apiKey);
     if (!apiKey) {
       return res.status(400).json({ message: "API Key Required" });
     }

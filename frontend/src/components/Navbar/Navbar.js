@@ -130,6 +130,8 @@ const Navbar = () => {
               <>
                 <Link to="/dashboard" className="nav-link">Dashboard</Link>
                 <Link to="/main" className="nav-link">API Key</Link>
+                <Link to="/Authtable" className="nav-link">Authtable</Link>
+
 
                 {/* PROFILE */}
                 <Link to="/profile" className="profile-link">
