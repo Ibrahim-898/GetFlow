@@ -22,7 +22,7 @@ async function getLogs(req, res) {
         apikey_id: apiKeyIds
       }
     });
-    console.log(logs);
+    // console.log(logs);
     res.status(200).json({
       data: logs
     });
